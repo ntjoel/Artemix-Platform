@@ -1,0 +1,301 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Icone vettoriali delle ispezioni.
+
+        Perche' vettoriali: i PNG storici sono bitmap a dimensione fissa, sgranano quando la
+        card viene ingrandita e alcune ispezioni ne condividevano una sola o usavano un
+        generico segno di spunta (Height e SideRollCount usavano COMPLIANT-OK.png). Qui ogni
+        ispezione ha il proprio disegno, nitido a qualunque scala.
+
+        Linguaggio grafico: e' quello gia' in uso nei PNG originali e viene mantenuto perche'
+        e' chiaro e riconoscibile sulla linea:
+          - il PACCO e' un rettangolo grigio (#7F7F7F), tratto spesso, sempre nella stessa
+            posizione, cosi' l'occhio riconosce subito il prodotto;
+          - l'elemento ROSSO (#E30613) e' cio' che quella specifica ispezione misura.
+        Tutte le geometrie usano lo stesso riquadro 512x512 e lo stesso pacco, quindi le icone
+        risultano allineate fra loro quando sono affiancate.
+    -->
+
+    <!-- Colori condivisi -->
+    <SolidColorBrush x:Key="InspIconPackBrush" Color="#7F7F7F"/>
+    <SolidColorBrush x:Key="InspIconFeatureBrush" Color="#E30613"/>
+
+    <!-- ============ LOGO: presenza del logo sul pacco ============ -->
+    <DrawingImage x:Key="InspIcon_Logo">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- blocco logo pieno, centrato -->
+                <GeometryDrawing Brush="#E30613" Geometry="M 196,216 H 316 V 296 H 196 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ PRINT CENTERING: scostamento del logo dal centro ============ -->
+    <DrawingImage x:Key="InspIcon_PrintCentering">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- assi di centro tratteggiati -->
+                <GeometryDrawing Geometry="M 256,148 V 364 M 88,256 H 424">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#7F7F7F" Thickness="8" DashCap="Flat">
+                            <Pen.DashStyle><DashStyle Dashes="3,3"/></Pen.DashStyle>
+                        </Pen>
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- logo spostato rispetto al centro: e' lo scostamento che si misura -->
+                <GeometryDrawing Brush="#E30613" Geometry="M 150,180 H 270 V 250 H 150 Z"/>
+                <!-- freccia di scostamento verso il centro -->
+                <GeometryDrawing Geometry="M 282,215 H 372">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="14"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 372,195 L 408,215 L 372,235 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ OPEN FLAPS: alette laterali aperte ============ -->
+    <DrawingImage x:Key="InspIcon_OpenFlaps">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 130,130 H 382 V 382 H 130 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- aletta sinistra aperta -->
+                <GeometryDrawing Geometry="M 113,147 L 40,196 V 316 L 113,365">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="30" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- aletta destra aperta -->
+                <GeometryDrawing Geometry="M 399,147 L 472,196 V 316 L 399,365">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="30" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ SURFACE CHECK: difetti/macchie sulla superficie ============ -->
+    <DrawingImage x:Key="InspIcon_SurfaceCheck">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 150,200 A 26,26 0 1 1 149,200 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 300,180 A 17,17 0 1 1 299,180 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 250,310 A 22,22 0 1 1 249,310 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 360,290 A 14,14 0 1 1 359,290 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ SHAPE TOP: pacco deformato visto dall'alto ============ -->
+    <DrawingImage x:Key="InspIcon_ShapeTop">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <!-- pacco nominale: stesso bordo grigio solido delle altre icone -->
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- sagoma reale deformata, interna al pacco: e' lo scostamento dal nominale -->
+                <GeometryDrawing Geometry="M 120,180 L 392,166 L 402,336 L 112,348 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="22" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ SHAPE SIDE: profilo laterale deformato ============ -->
+    <DrawingImage x:Key="InspIcon_ShapeSide">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <!-- pacco nominale: stesso bordo grigio solido delle altre icone -->
+                <GeometryDrawing Geometry="M 70,150 H 442 V 362 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- fianco rigonfio interno al pacco: il difetto tipico della vista laterale -->
+                <GeometryDrawing Geometry="M 130,190 H 382 C 410,240 410,272 382,322 H 130 C 102,272 102,240 130,190 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="22" LineJoin="Round"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ SIDE SEALING: saldatura laterale ============ -->
+    <DrawingImage x:Key="InspIcon_SideSealing">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- cordolo di saldatura verticale sul fianco, con irregolarita' -->
+                <GeometryDrawing Geometry="M 372,147 V 232 L 340,268 L 372,300 V 365">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="30" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ BOTTOM SEALING: saldatura di fondo ============ -->
+    <DrawingImage x:Key="InspIcon_BottomSealing">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- cordolo orizzontale in basso con difetto centrale -->
+                <GeometryDrawing Geometry="M 96,330 H 216 L 256,296 L 296,330 H 416">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="30" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ TRAPPED PAPER: carta intrappolata nella saldatura ============ -->
+    <DrawingImage x:Key="InspIcon_TrappedPaper">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- linea di saldatura -->
+                <GeometryDrawing Geometry="M 96,320 H 416">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="18"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- lembo di carta che sporge dalla saldatura -->
+                <GeometryDrawing Brush="#E30613" Geometry="M 250,320 L 366,246 L 396,290 L 286,320 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ HEIGHT: altezza del pacco (vista laterale) ============ -->
+    <DrawingImage x:Key="InspIcon_Height">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 150,130 H 442 V 382 H 150 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- quota verticale con frecce -->
+                <GeometryDrawing Geometry="M 88,150 V 362">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="16"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 88,120 L 116,164 L 60,164 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 88,392 L 116,348 L 60,348 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ SIDE ROLL COUNT: conteggio rotoli sul fianco ============ -->
+    <DrawingImage x:Key="InspIcon_SideRollCount">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- tre testate di rotolo: e' cio' che si conta -->
+                <GeometryDrawing Geometry="M 158,256 A 46,46 0 1 1 157,256 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="22"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="M 256,256 A 46,46 0 1 1 255,256 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="22"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="M 354,256 A 46,46 0 1 1 353,256 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="22"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ FRONT TRACEABILITY: codice/lotto stampato ============ -->
+    <DrawingImage x:Key="InspIcon_FrontTraceability">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="3"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- barcode -->
+                <GeometryDrawing Brush="#E30613" Geometry="M 140,196 H 156 V 300 H 140 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 172,196 H 196 V 300 H 172 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 212,196 H 224 V 300 H 212 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 240,196 H 268 V 300 H 240 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 284,196 H 296 V 300 H 284 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 312,196 H 336 V 300 H 312 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 352,196 H 368 V 300 H 352 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ 3D HEIGHT / WIDTH / LENGTH: quota sull'asse relativo ============ -->
+    <DrawingImage x:Key="InspIcon_ThreeDHeight">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 140,200 H 360 V 380 H 140 Z M 140,200 L 200,140 H 420 L 360,200 M 360,380 L 420,320 V 140">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="24" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="M 84,210 V 370">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="16"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 84,180 L 110,224 L 58,224 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 84,400 L 110,356 L 58,356 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="InspIcon_ThreeDWidth">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 140,200 H 360 V 380 H 140 Z M 140,200 L 200,140 H 420 L 360,200 M 360,380 L 420,320 V 140">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="24" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="M 156,430 H 344">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="16"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 126,430 L 170,404 V 456 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 374,430 L 330,404 V 456 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="InspIcon_ThreeDLength">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 140,200 H 360 V 380 H 140 Z M 140,200 L 200,140 H 420 L 360,200 M 360,380 L 420,320 V 140">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="24" LineJoin="Miter"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- quota lungo la fuga prospettica -->
+                <GeometryDrawing Geometry="M 392,404 L 452,344">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="16"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 370,426 L 386,376 L 420,392 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 474,322 L 458,372 L 424,356 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- ============ AI CLASSIFICATION: classificazione dell'immagine ============ -->
+    <DrawingImage x:Key="InspIcon_AIClassification">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Geometry="M 70,130 H 442 V 382 H 70 Z">
+                    <GeometryDrawing.Pen><Pen Brush="#7F7F7F" Thickness="34"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <!-- nodi e connessioni: il modello che classifica -->
+                <GeometryDrawing Geometry="M 168,200 L 268,256 M 168,312 L 268,256 M 268,256 L 366,208 M 268,256 L 366,304">
+                    <GeometryDrawing.Pen><Pen Brush="#E30613" Thickness="12"/></GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#E30613" Geometry="M 168,200 A 22,22 0 1 1 167,200 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 168,312 A 22,22 0 1 1 167,312 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 268,256 A 26,26 0 1 1 267,256 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 366,208 A 22,22 0 1 1 365,208 Z"/>
+                <GeometryDrawing Brush="#E30613" Geometry="M 366,304 A 22,22 0 1 1 365,304 Z"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+</ResourceDictionary>

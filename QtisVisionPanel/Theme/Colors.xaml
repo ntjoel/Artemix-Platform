@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+
+    <!-- Color Palette -->
+    <Color x:Key="PrimaryDark">#2C3E50</Color>
+    <Color x:Key="PrimaryMedium">#34495E</Color>
+    <Color x:Key="PrimaryLight">#3A4A5F</Color>
+    <Color x:Key="AccentGreen">#27AE60</Color>
+    <Color x:Key="AccentBlue">#3498DB</Color>
+    <Color x:Key="AccentRed">#E74C3C</Color>
+    <Color x:Key="TextWhite">#FFFFFF</Color>
+    <Color x:Key="TextLight">#ECF0F1</Color>
+    <Color x:Key="TextGray">#95A5A6</Color>
+    <Color x:Key="BackgroundLight">#ECF0F1</Color>
+    <Color x:Key="BorderGray">#BDC3C7</Color>
+
+    <!-- Solid Color Brushes -->
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDark}"/>
+    <SolidColorBrush x:Key="PrimaryMediumBrush" Color="{StaticResource PrimaryMedium}"/>
+    <SolidColorBrush x:Key="PrimaryLightBrush" Color="{StaticResource PrimaryLight}"/>
+    <SolidColorBrush x:Key="AccentGreenBrush" Color="{StaticResource AccentGreen}"/>
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlue}"/>
+    <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRed}"/>
+    <SolidColorBrush x:Key="TextWhiteBrush" Color="{StaticResource TextWhite}"/>
+    <SolidColorBrush x:Key="TextLightBrush" Color="{StaticResource TextLight}"/>
+    <SolidColorBrush x:Key="TextGrayBrush" Color="{StaticResource TextGray}"/>
+    <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLight}"/>
+    <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
+
+
+</ResourceDictionary>

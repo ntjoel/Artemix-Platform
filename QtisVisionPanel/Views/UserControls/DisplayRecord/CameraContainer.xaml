@@ -1,0 +1,112 @@
+<UserControl x:Class="QtisVisionPanel.Views.UserControls.DisplayRecord.CameraContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:QtisVisionPanel.ViewModels"
+             xmlns:Counter="clr-namespace:QtisVisionPanel.Views.UserControls"
+             xmlns:local="clr-namespace:QtisVisionPanel.Views.UserControls.DisplayRecord"
+             mc:Ignorable="d"
+             Loaded="OnViewportLoaded"
+             SizeChanged="OnViewportSizeChanged"
+             d:DesignHeight="900"
+             d:DesignWidth="1800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="TopCameraTemplate">
+            <local:TopCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="SideCameraTemplate">
+            <local:SideCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="LeftCameraTemplate">
+            <local:LeftCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="FrontCameraTemplate">
+            <local:FrontCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="RearCameraTemplate">
+            <local:RearCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="RightCameraTemplate">
+            <local:RightCameraView/>
+        </DataTemplate>
+        <DataTemplate x:Key="BottomCameraTemplate">
+            <local:BottomCameraView/>
+        </DataTemplate>
+
+        <vm:CameraTemplateSelector x:Key="CameraTemplateSelector"
+                                   TopCameraTemplate="{StaticResource TopCameraTemplate}"
+                                   SideCameraTemplate="{StaticResource SideCameraTemplate}"
+                                   LeftCameraTemplate="{StaticResource LeftCameraTemplate}"
+                                   FrontCameraTemplate="{StaticResource FrontCameraTemplate}"
+                                   RearCameraTemplate="{StaticResource RearCameraTemplate}"
+                                   RightCameraTemplate="{StaticResource RightCameraTemplate}"
+                                   BottomCameraTemplate="{StaticResource BottomCameraTemplate}"/>
+    </UserControl.Resources>
+
+    <Grid Margin="0"
+          Background="Transparent"
+          UseLayoutRounding="True"
+          SnapsToDevicePixels="True">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="True"
+                      PanningMode="VerticalOnly">
+            <StackPanel Margin="0">
+                <Border CornerRadius="14"
+                        Background="#F4F8FC"
+                        BorderBrush="#D7E2EC"
+                        BorderThickness="1"
+                        Padding="{Binding CameraSectionPadding}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0"
+                                Margin="2,2,2,8"
+                                Padding="{DynamicResource CameraInfoPadding}"
+                                CornerRadius="10"
+                                Background="#ECF4FB"
+                                BorderBrush="#D6E4F0"
+                                BorderThickness="1">
+                            <TextBlock Text="{Binding LogMessage}"
+                                       FontSize="{DynamicResource CameraInfoFontSize}"
+                                       FontWeight="SemiBold"
+                                       Foreground="#24405A"
+                                       TextWrapping="Wrap"/>
+                        </Border>
+
+                        <ItemsControl Grid.Row="1"
+                                      ItemsSource="{Binding CameraViews}"
+                                      ItemTemplateSelector="{StaticResource CameraTemplateSelector}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="{Binding DataContext.CameraColumnCount, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                 HorizontalAlignment="Stretch"
+                                                 VerticalAlignment="Top"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Margin" Value="2"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+
+                <Border Margin="0,8,0,0"
+                        CornerRadius="14"
+                        Background="#FAFCFF"
+                        BorderBrush="#D8E2EC"
+                        BorderThickness="1"
+                        Padding="4"
+                        VerticalAlignment="Top">
+                    <Counter:StatisticsView x:Name="StatisticsViewControl"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

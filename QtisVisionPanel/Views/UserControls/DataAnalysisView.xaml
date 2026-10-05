@@ -1,0 +1,569 @@
+<UserControl x:Class="QtisVisionPanel.Views.UserControls.DataAnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:QtisVisionPanel.Models"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="CardBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="BorderBrush" Value="#D6E1EB" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#FBFDFF" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Background" Value="#1F6FA7" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#1F6FA7" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="GhostButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="#EEF3F8" />
+            <Setter Property="Foreground" Value="#13304A" />
+            <Setter Property="BorderBrush" Value="#D6E1EB" />
+        </Style>
+
+        <Style x:Key="CaptionTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#6A7F95" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <Style x:Key="ValueTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#10253B" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Background="#F4F8FC">
+        <Grid Margin="18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="#173755"
+                    CornerRadius="22"
+                    Padding="24"
+                    Margin="0,0,0,14">
+                <DockPanel LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Top">
+                        <Button Content="{Binding RefreshLabel}"
+                                Command="{Binding ApplyFiltersCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}" />
+                        <Button Content="{Binding ExportPdfLabel}"
+                                Click="ExportPdfButton_Click"
+                                Style="{StaticResource GhostButtonStyle}" />
+                        <Button Content="{Binding EditOrSaveLabel}"
+                                Command="{Binding ToggleEditModeCommand}"
+                                Style="{StaticResource GhostButtonStyle}"
+                                Visibility="{Binding IsAdministrator, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </StackPanel>
+
+                    <StackPanel>
+                        <TextBlock Text="{Binding Title}"
+                                   Foreground="White"
+                                   FontSize="24"
+                                   FontWeight="Bold" />
+                        <TextBlock Text="{Binding Subtitle}"
+                                   Margin="0,6,0,0"
+                                   Foreground="#C7D7E6"
+                                   FontSize="13" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="{Binding FilterTitle}"
+                               Style="{StaticResource ValueTextStyle}" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="260" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding StartDateLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="62" />
+                                </Grid.ColumnDefinitions>
+                                <DatePicker Grid.Column="0"
+                                            SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding StartTimeText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         ToolTip="HH:mm"
+                                         TextAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding EndDateLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="8" />
+                                    <ColumnDefinition Width="62" />
+                                </Grid.ColumnDefinitions>
+                                <DatePicker Grid.Column="0"
+                                            SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Grid.Column="2"
+                                         Text="{Binding EndTimeText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                         ToolTip="HH:mm"
+                                         TextAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding RecipeLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <ComboBox ItemsSource="{Binding RecipeOptions}"
+                                      SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"
+                                      DisplayMemberPath="Label" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Bottom"
+                                    Visibility="{Binding CanEditDashboard, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ComboBox Width="220"
+                                      ItemsSource="{Binding AvailableCards}"
+                                      SelectedItem="{Binding SelectedAvailableCard, Mode=TwoWay}"
+                                      DisplayMemberPath="Label"
+                                      Margin="0,0,8,0" />
+                            <Button Content="{Binding AddCardLabel}"
+                                    Command="{Binding AddCardCommand}"
+                                    Style="{StaticResource GhostButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,16,0,0"
+                          Visibility="{Binding CanEditDashboard, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding TotalBarColorLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBox Text="{Binding TotalBarColorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                            <TextBlock Text="{Binding GoodBarColorLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBox Text="{Binding GoodBarColorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{Binding NoGoodBarColorLabel}" Style="{StaticResource CaptionTextStyle}" />
+                            <TextBox Text="{Binding NoGoodBarColorText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Margin="0,14,0,0"
+                               Foreground="#1F6FA7"
+                               FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel x:Name="DataAnalysisChartsExportRoot" Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.05*" />
+                        <ColumnDefinition Width="0.95*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="ProductionOverviewCard"
+                            Grid.Column="0"
+                            Style="{StaticResource CardBorderStyle}"
+                            Visibility="{Binding IsProductionOverviewVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="{Binding ProductionOverviewLabel}"
+                                           Style="{StaticResource ValueTextStyle}" />
+                                <Button DockPanel.Dock="Right"
+                                        Content="Remove"
+                                        Command="{Binding RemoveCardCommand}"
+                                        CommandParameter="{x:Static models:DataAnalysisCardType.ProductionOverview}"
+                                        Style="{StaticResource GhostButtonStyle}"
+                                        Visibility="{Binding CanEditDashboard, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </DockPanel>
+
+                            <ItemsControl ItemsSource="{Binding ProductionBars}" Margin="0,16,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="90" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="60" />
+                                                <ColumnDefinition Width="64" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Label}"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="#10253B"
+                                                       FontWeight="SemiBold" />
+
+                                            <Border Grid.Column="1"
+                                                    Height="26"
+                                                    CornerRadius="13"
+                                                    Background="#EAF2FB">
+                                                <Border Width="{Binding Width}"
+                                                        Height="26"
+                                                        HorizontalAlignment="Left"
+                                                        Background="{Binding Fill}"
+                                                        CornerRadius="13" />
+                                            </Border>
+
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{Binding Value}"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#10253B"
+                                                       FontWeight="Bold"
+                                                       Margin="0,0,8,0" />
+
+                                            <TextBlock Grid.Column="3"
+                                                       Text="{Binding Percentage, StringFormat={}{0:P1}}"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#6A7F95"
+                                                       FontSize="12" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="DefectDistributionCard"
+                            Grid.Column="1"
+                            Style="{StaticResource CardBorderStyle}"
+                            Margin="14,0,0,14"
+                            Visibility="{Binding IsDefectPieVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel>
+                            <DockPanel>
+                                <TextBlock Text="{Binding DefectDistributionLabel}"
+                                           Style="{StaticResource ValueTextStyle}" />
+                                <Button DockPanel.Dock="Right"
+                                        Content="Remove"
+                                        Command="{Binding RemoveCardCommand}"
+                                        CommandParameter="{x:Static models:DataAnalysisCardType.DefectPie}"
+                                        Style="{StaticResource GhostButtonStyle}"
+                                        Visibility="{Binding CanEditDashboard, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            </DockPanel>
+
+                            <Grid Margin="0,14,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="240" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0"
+                                      Width="220"
+                                      Height="220"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Top">
+                                    <Ellipse Fill="#EEF3F8" Stroke="#D6E1EB" StrokeThickness="1" />
+                                    <ItemsControl ItemsSource="{Binding DefectItems}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <Grid />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Path Data="{Binding SliceGeometry}"
+                                                      Fill="{Binding Fill}"
+                                                      Stroke="White"
+                                                      StrokeThickness="1" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Border Width="86"
+                                            Height="86"
+                                            Background="White"
+                                            BorderBrush="#D6E1EB"
+                                            BorderThickness="1"
+                                            CornerRadius="43"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="NC"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#10253B"
+                                                   FontWeight="Bold"
+                                                   FontSize="20" />
+                                    </Border>
+                                </Grid>
+
+                                <ScrollViewer Grid.Column="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              Margin="14,0,0,0"
+                                              MaxHeight="240">
+                                    <ItemsControl ItemsSource="{Binding DefectItems}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="0,0,0,8"
+                                                        Padding="10"
+                                                        Background="#F8FBFE"
+                                                        BorderBrush="#DCE6F0"
+                                                        BorderThickness="1"
+                                                        CornerRadius="12">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="18" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="70" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Ellipse Width="12"
+                                                                 Height="12"
+                                                                 Fill="{Binding Fill}"
+                                                                 VerticalAlignment="Center" />
+                                                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                            <TextBlock Text="{Binding Label}" Foreground="#10253B" FontWeight="SemiBold" />
+                                                            <TextBlock Text="{Binding Percentage, StringFormat={}{0:P1}}" Foreground="#6A7F95" FontSize="11" />
+                                                        </StackPanel>
+                                                        <TextBlock Grid.Column="2"
+                                                                   Text="{Binding Value}"
+                                                                   HorizontalAlignment="Right"
+                                                                   VerticalAlignment="Center"
+                                                                   Foreground="#10253B"
+                                                                   FontWeight="Bold" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <ItemsControl x:Name="TrendCardsItemsControl"
+                              ItemsSource="{Binding TrendCards}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:DataAnalysisTrendCard}">
+                        <Border Style="{StaticResource CardBorderStyle}"
+                                Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel>
+                                <DockPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Title}" Style="{StaticResource ValueTextStyle}" />
+                                        <TextBlock Text="{Binding Subtitle}" Foreground="#6A7F95" FontSize="11" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                    <Button DockPanel.Dock="Right"
+                                            Content="Remove"
+                                            Command="{Binding DataContext.RemoveCardCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding CardType}"
+                                            Style="{StaticResource GhostButtonStyle}"
+                                            Visibility="{Binding DataContext.CanEditDashboard, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                </DockPanel>
+
+                                <Grid Margin="0,16,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" MinWidth="520" />
+                                        <ColumnDefinition Width="260" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0"
+                                            BorderBrush="#DCE6F0"
+                                            BorderThickness="1"
+                                            CornerRadius="12"
+                                            Background="#F8FBFE"
+                                            Padding="10">
+                                        <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Stretch">
+                                        <Grid Width="680" Height="214">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="72" />
+                                                <ColumnDefinition Width="600" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="180" />
+                                                <RowDefinition Height="34" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0" Grid.Column="0" Height="180">
+                                                <ItemsControl ItemsSource="{Binding YAxisLabels}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <Canvas Width="72" Height="180" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemContainerStyle>
+                                                        <Style TargetType="ContentPresenter">
+                                                            <Setter Property="Canvas.Left" Value="0" />
+                                                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                                                        </Style>
+                                                    </ItemsControl.ItemContainerStyle>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Text}"
+                                                                       Width="66"
+                                                                       TextAlignment="Right"
+                                                                       Foreground="#6A7F95"
+                                                                       FontSize="11" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+
+                                            <Canvas Grid.Row="0" Grid.Column="1" Width="600" Height="180">
+                                                <Rectangle Fill="#E5F3EA"
+                                                           RadiusX="10"
+                                                           RadiusY="10"
+                                                           Opacity="0.45"
+                                                           Canvas.Top="{Binding ToleranceBandTop}"
+                                                           Visibility="{Binding HasReferenceBand, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                           Width="600"
+                                                           Height="{Binding ToleranceBandHeight}" />
+                                                <Line X1="0" Y1="180" X2="600" Y2="180" Stroke="#D6E1EB" StrokeThickness="1" />
+                                                <Line X1="0" Y1="0" X2="0" Y2="180" Stroke="#D6E1EB" StrokeThickness="1" />
+                                                <Line X1="0" Y1="45" X2="600" Y2="45" Stroke="#E6EDF5" StrokeThickness="1" StrokeDashArray="3,3" />
+                                                <Line X1="0" Y1="90" X2="600" Y2="90" Stroke="#E6EDF5" StrokeThickness="1" StrokeDashArray="3,3" />
+                                                <Line X1="0" Y1="135" X2="600" Y2="135" Stroke="#E6EDF5" StrokeThickness="1" StrokeDashArray="3,3" />
+                                                <Polyline Points="{Binding LowerTolerancePolylinePoints}" Stroke="#B45309" StrokeThickness="1.5" StrokeDashArray="4,4" />
+                                                <Polyline Points="{Binding UpperTolerancePolylinePoints}" Stroke="#B45309" StrokeThickness="1.5" StrokeDashArray="4,4" />
+                                                <Polyline Points="{Binding NominalPolylinePoints}" Stroke="#4B5563" StrokeThickness="1.5" StrokeDashArray="6,3" />
+                                                <Path Data="{Binding AverageAreaPathData}"
+                                                      StrokeThickness="0">
+                                                    <Path.Fill>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                            <GradientStop Color="#401F6FA7" Offset="0" />
+                                                            <GradientStop Color="#001F6FA7" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                                <Path Data="{Binding MinimumPathData}"
+                                                      Fill="Transparent"
+                                                      Stroke="#E67E22"
+                                                      StrokeThickness="1.5"
+                                                      StrokeLineJoin="Round"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Visibility="{Binding ShowMinMax, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                <Path Data="{Binding MaximumPathData}"
+                                                      Fill="Transparent"
+                                                      Stroke="#35A26B"
+                                                      StrokeThickness="1.5"
+                                                      StrokeLineJoin="Round"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Visibility="{Binding ShowMinMax, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                <Path Data="{Binding AveragePathData}"
+                                                      Fill="Transparent"
+                                                      Stroke="#1F6FA7"
+                                                      StrokeThickness="2.5"
+                                                      StrokeLineJoin="Round"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round" />
+                                            </Canvas>
+
+                                            <Grid Grid.Row="1" Grid.Column="1" Width="600" Height="34">
+                                                <ItemsControl ItemsSource="{Binding XAxisLabels}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <Canvas Width="600" Height="34" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemContainerStyle>
+                                                        <Style TargetType="ContentPresenter">
+                                                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                                                            <Setter Property="Canvas.Top" Value="4" />
+                                                        </Style>
+                                                    </ItemsControl.ItemContainerStyle>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Text}"
+                                                                       Width="72"
+                                                                       TextAlignment="Center"
+                                                                       TextWrapping="Wrap"
+                                                                       Foreground="#6A7F95"
+                                                                       FontSize="11" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </Grid>
+                                        </Viewbox>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                                        <Border Background="#EAF4FF"
+                                                BorderBrush="#DCE6F0"
+                                                BorderThickness="1"
+                                                CornerRadius="12"
+                                                Padding="12"
+                                                Margin="0,0,0,10">
+                                            <TextBlock Text="{Binding SummaryText}"
+                                                       TextWrapping="Wrap"
+                                                       Foreground="#10253B"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="13"
+                                                       LineHeight="20" />
+                                        </Border>
+
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                <Rectangle Width="16" Height="4" Fill="#4B5563" VerticalAlignment="Center" />
+                                                <TextBlock Text="Nominal" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="#10253B" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                <Rectangle Width="16" Height="10" Fill="#E5F3EA" Stroke="#B45309" StrokeThickness="1" VerticalAlignment="Center" />
+                                                <TextBlock Text="Tolerance range" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="#10253B" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                <Rectangle Width="16" Height="4" Fill="#1F6FA7" VerticalAlignment="Center" />
+                                                <TextBlock Text="Average" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="#10253B" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal"
+                                                        Margin="0,0,0,6"
+                                                        Visibility="{Binding ShowMinMax, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Rectangle Width="16" Height="4" Fill="#E67E22" VerticalAlignment="Center" />
+                                                <TextBlock Text="Minimum" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="#10253B" />
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal"
+                                                        Visibility="{Binding ShowMinMax, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Rectangle Width="16" Height="4" Fill="#35A26B" VerticalAlignment="Center" />
+                                                <TextBlock Text="Maximum" Margin="8,0,0,0" VerticalAlignment="Center" Foreground="#10253B" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

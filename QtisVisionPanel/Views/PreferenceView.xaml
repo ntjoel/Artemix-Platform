@@ -1,0 +1,1105 @@
+<UserControl x:Class="QtisVisionPanel.Views.PreferenceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:QtisVisionPanel.Views"
+             xmlns:vm="clr-namespace:QtisVisionPanel.ViewModels"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:converters="clr-namespace:QtisVisionPanel.Converters"
+             mc:Ignorable="d"
+             SizeChanged="PreferenceView_SizeChanged"
+             d:DesignHeight="900" d:DesignWidth="1400"
+             Background="#EEF4FA">
+
+    <UserControl.Resources>
+
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="LanguageGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="SystemGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#11998e" Offset="0"/>
+            <GradientStop Color="#38ef7d" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="UserGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#fc4a1a" Offset="0"/>
+            <GradientStop Color="#f7b733" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Shared brushes -->
+        <SolidColorBrush x:Key="CardBorderBrush"   Color="#D6E3EF"/>
+        <SolidColorBrush x:Key="PageMutedBrush"    Color="#6B7A90"/>
+        <SolidColorBrush x:Key="SectionLabelBrush" Color="#26415C"/>
+        <SolidColorBrush x:Key="FieldHintBrush"    Color="#7B8BA0"/>
+        <SolidColorBrush x:Key="InputBackgroundBrush" Color="#F8FBFE"/>
+        <SolidColorBrush x:Key="InputBorderBrush"  Color="#C9D8E8"/>
+        <SolidColorBrush x:Key="HeaderShellBrush"  Color="#132B43"/>
+
+        <DropShadowEffect x:Key="CardShadow" ShadowDepth="2" BlurRadius="12" Opacity="0.12" Color="#08233D"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:DecimalTextBoxConverter x:Key="DecimalTextBoxConverter"/>
+
+        <!-- Card shell -->
+        <Style x:Key="CardBorderStyle" TargetType="Border">
+            <Setter Property="Background"       Value="White"/>
+            <Setter Property="CornerRadius"     Value="18"/>
+            <Setter Property="Margin"           Value="7"/>
+            <Setter Property="Padding"          Value="0"/>
+            <Setter Property="BorderBrush"      Value="{StaticResource CardBorderBrush}"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="Effect"           Value="{StaticResource CardShadow}"/>
+        </Style>
+
+        <!-- Text styles -->
+        <Style x:Key="CardSectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"     Value="12"/>
+            <Setter Property="FontWeight"   Value="SemiBold"/>
+            <Setter Property="Foreground"   Value="{StaticResource SectionLabelBrush}"/>
+            <Setter Property="Margin"       Value="0,0,0,6"/>
+        </Style>
+        <Style x:Key="CardHintStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"     Value="11"/>
+            <Setter Property="Foreground"   Value="{StaticResource FieldHintBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="ConfigFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#35516D"/>
+            <Setter Property="Margin"     Value="0,0,0,4"/>
+        </Style>
+
+        <!-- Config section card -->
+        <Style x:Key="ConfigSectionCardStyle" TargetType="Border">
+            <Setter Property="Background"       Value="#F8FBFE"/>
+            <Setter Property="BorderBrush"      Value="#D7E4F0"/>
+            <Setter Property="BorderThickness"  Value="1"/>
+            <Setter Property="CornerRadius"     Value="12"/>
+            <Setter Property="Padding"          Value="16"/>
+            <Setter Property="Margin"           Value="0,0,0,12"/>
+        </Style>
+
+        <!-- Input -->
+        <Style x:Key="PreferenceTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background"              Value="{StaticResource InputBackgroundBrush}"/>
+            <Setter Property="BorderBrush"             Value="{StaticResource InputBorderBrush}"/>
+            <Setter Property="BorderThickness"         Value="1"/>
+            <Setter Property="Padding"                 Value="10,7"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize"                Value="12"/>
+        </Style>
+
+        <!-- Buttons -->
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
+            <Setter Property="Foreground"    Value="White"/>
+            <Setter Property="Padding"       Value="18,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"        Value="Hand"/>
+            <Setter Property="FontWeight"    Value="SemiBold"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── Page Header ─────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                Background="{StaticResource HeaderShellBrush}"
+                CornerRadius="18"
+                Margin="0,0,0,10"
+                Padding="18,14"
+                Effect="{StaticResource CardShadow}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Border Width="44" Height="44" CornerRadius="13" Background="#1D476C" Margin="0,0,14,0">
+                        <fa:FontAwesome Icon="Cog" FontSize="22" Foreground="White"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Name="Sub_entry_PreferenceView"
+                                   FontSize="21" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock x:Name="Sub_entry_PreferenceSubtitle"
+                                   Margin="0,3,0,0" FontSize="11" Foreground="#BBD0E5"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border Grid.Column="1" Background="#1A3A58" CornerRadius="14" Padding="14,8">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="10" Height="10" Fill="{Binding StatusColor}" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Foreground="White" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ── Cards Area ───────────────────────────────────────────── -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Grid x:Name="PreferenceCardsGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="290" MinWidth="240"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="290" MinWidth="240"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ══════════════════════════════════════════════════
+                     CARD 1 — Language & Localisation  (Col 0)
+                ═══════════════════════════════════════════════════ -->
+                <Border x:Name="LanguageCard"
+                        Grid.Column="0"
+                        Style="{StaticResource CardBorderStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Card header -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource LanguageGradient}"
+                                CornerRadius="18,18,0,0" Padding="18,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Width="38" Height="38" CornerRadius="11" Background="#33FFFFFF" Margin="0,0,10,0">
+                                        <fa:FontAwesome Icon="Globe" FontSize="18" Foreground="White"
+                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Name="Sub_entry_Language"
+                                                   FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                        <TextBlock x:Name="Sub_entry_LanguageCardHint"
+                                                   Margin="0,2,0,0" FontSize="10" Foreground="#E3EEFF"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Grid.Column="1" Background="#2DFFFFFF" CornerRadius="12"
+                                        Padding="8,5" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding SelectedLanguage.Code}"
+                                               Foreground="White" FontWeight="Bold" FontSize="12"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Card content -->
+                        <StackPanel Grid.Row="1" Margin="18,16,18,18">
+
+                            <!-- Language selector label -->
+                            <TextBlock Name="Sub_entry_CurrentLanguage"
+                                       Style="{StaticResource CardSectionLabelStyle}"/>
+
+                            <Border BorderBrush="{StaticResource InputBorderBrush}" BorderThickness="1"
+                                    CornerRadius="10" Padding="8" Margin="0,0,0,14"
+                                    Background="{StaticResource InputBackgroundBrush}">
+                                <ComboBox ItemsSource="{Binding AvailableLanguages}"
+                                          SelectedItem="{Binding SelectedLanguage}"
+                                          BorderThickness="0" Background="Transparent">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{Binding FullFlagImagePath}"
+                                                       Width="22" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                                                <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Code, StringFormat=' ({0})'}"
+                                                           Foreground="#999" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Border>
+
+                            <!-- Compact flag preview -->
+                            <Border BorderBrush="#D9E6F2" BorderThickness="1"
+                                    CornerRadius="12" Padding="14,10" Margin="0,0,0,16"
+                                    Background="#F7FAFD">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Background="White" BorderBrush="#E1E9F2" BorderThickness="1"
+                                            CornerRadius="8" Padding="6" Margin="0,0,12,0">
+                                        <Image Source="{Binding CurrentFlagImage}"
+                                               Width="40" Height="30" Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding SelectedLanguage.DisplayName}"
+                                                   FontWeight="SemiBold" FontSize="13"/>
+                                        <TextBlock x:Name="Sub_entry_LanguagePreviewHint"
+                                                   Style="{StaticResource CardHintStyle}"
+                                                   Margin="0,3,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Paths -->
+                            <TextBlock x:Name="Sub_entry_ConfigPaths"
+                                       Style="{StaticResource CardSectionLabelStyle}"/>
+
+                            <TextBlock Name="Sub_entry_FlagImagesPath"
+                                       FontSize="11" Foreground="#888" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding FlagImagesPath}"
+                                     Style="{StaticResource PreferenceTextBoxStyle}"
+                                     IsReadOnly="True" Margin="0,0,0,10"/>
+
+                            <TextBlock Name="Sub_entry_LanguageFilesPath"
+                                       FontSize="11" Foreground="#888" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding LanguageFilesPath}"
+                                     Style="{StaticResource PreferenceTextBoxStyle}"
+                                     IsReadOnly="True" Margin="0,0,0,20"/>
+
+                            <!-- Actions -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Command="{Binding TestPathsCommand}"
+                                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                        Margin="0,0,10,0" Padding="12,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <fa:FontAwesome Icon="CheckCircle" FontSize="14" Margin="0,0,5,0"/>
+                                        <TextBlock Name="Sub_entry_TestLabel"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Command="{Binding SaveLanguageCommand}"
+                                        Background="#667eea" Foreground="White"
+                                        Padding="18,9"
+                                        Style="{StaticResource PrimaryActionButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <fa:FontAwesome Icon="Save" FontSize="14" Foreground="White" Margin="0,0,5,0"/>
+                                        <TextBlock Name="sub_entry_saveLabel" Foreground="White"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ══════════════════════════════════════════════════
+                     CARD 2 — Config.xml Editor  (Col 1)
+                ═══════════════════════════════════════════════════ -->
+                <Border x:Name="ConfigEditorCard"
+                        Grid.Column="1"
+                        Style="{StaticResource CardBorderStyle}"
+                        Visibility="{Binding CanManageConfigFile, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Card header -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource SystemGradient}"
+                                CornerRadius="18,18,0,0" Padding="18,16">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="38" Height="38" CornerRadius="11" Background="#33FFFFFF" Margin="0,0,10,0">
+                                    <fa:FontAwesome Icon="Sliders" FontSize="18" Foreground="White"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Name="Sub_entry_ConfigEditorTitle"
+                                               FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="Sub_entry_ConfigEditorCardHint"
+                                               Margin="0,2,0,0" FontSize="10" Foreground="#E3FFF7"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Card content -->
+                        <Grid Grid.Row="1" Margin="18,14,18,18">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Toolbar: path + reload + save -->
+                            <Border Grid.Row="0"
+                                    Background="#F4F9FE"
+                                    BorderBrush="#D7E4F0" BorderThickness="1"
+                                    CornerRadius="12" Padding="14" Margin="0,0,0,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Name="Sub_entry_ConfigFilePathLabel"
+                                                   Style="{StaticResource CardSectionLabelStyle}"/>
+                                        <TextBlock x:Name="Sub_entry_ConfigFilePathHint"
+                                                   Style="{StaticResource CardHintStyle}"
+                                                   Margin="0,0,0,8"/>
+                                        <TextBox Text="{Binding MainConfigFilePath, Mode=OneWay}"
+                                                 Style="{StaticResource PreferenceTextBoxStyle}"
+                                                 IsReadOnly="True"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1"
+                                            Command="{Binding ReloadConfigFileCommand}"
+                                            Background="#5E7C99" Foreground="White"
+                                            Margin="10,0,8,0" Padding="16,11"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource PrimaryActionButtonStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa:FontAwesome Icon="Refresh" FontSize="16" Foreground="White" Margin="0,0,7,0"/>
+                                            <TextBlock x:Name="Sub_entry_ReloadConfigButton" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <Button Grid.Column="2"
+                                            Command="{Binding SaveConfigFileCommand}"
+                                            Background="#11998e" Foreground="White"
+                                            Padding="16,11" VerticalAlignment="Center"
+                                            Style="{StaticResource PrimaryActionButtonStyle}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa:FontAwesome Icon="Save" FontSize="16" Foreground="White" Margin="0,0,7,0"/>
+                                            <TextBlock x:Name="Sub_entry_SaveConfigButton" Foreground="White"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <!-- Config sections in 2 columns -->
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Left column -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,6,0">
+
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#667eea" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionPaths"
+                                                           Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionPathsHint"
+                                                           Style="{StaticResource CardHintStyle}"
+                                                           Margin="0,0,0,12"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigMachineTypeLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.MachineType, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigRecipeFolderLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.Recipe_Folder, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigImageDirLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.ImageDir, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigBackupRecipeLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.BackupRecipe, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDashboardLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.Dashboard, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Company" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.Compagny, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Data hostname" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.DataHostnames, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Camera count" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.NumCamera, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Days to clean data" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.DayToCleanData, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#764ba2" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionCameras"
+                                                           Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionCamerasHint"
+                                                           Style="{StaticResource CardHintStyle}"
+                                                           Margin="0,0,0,12"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigTopCameraSerialLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.TopCameraSerial, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSideCameraSerialLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.SideCameraSerial, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigFrontCameraSerialLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.FrontCameraSerial, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigRearCameraSerialLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.RearCameraSerial, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigBottomCameraSerialLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.BottomCameraSerial, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- VisionPro outputs -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#9C27B0" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="VisionPro outputs" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Channel names written by the inspection engine"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Traceability presence output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.FrontTraceabilityPresenceOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Traceability code output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.FrontTraceabilityCodeOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="3D height output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.ThreeDHeightOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="3D width output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.ThreeDWidthOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="3D length output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.ThreeDLengthOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+
+                                                <Border BorderBrush="#D7E2EC"
+                                                        BorderThickness="0,1,0,0"
+                                                        Margin="0,4,0,12"
+                                                        Padding="0,12,0,0">
+                                                    <StackPanel>
+                                                        <TextBlock x:Name="Sub_entry_ConfigTop3DMeasurementOffsets"
+                                                                   Style="{StaticResource CardSectionLabelStyle}"/>
+                                                        <TextBlock x:Name="Sub_entry_ConfigTop3DMeasurementOffsetsHint"
+                                                                   Style="{StaticResource CardHintStyle}"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,0,0,10"/>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                                                <TextBlock x:Name="Sub_entry_ConfigTop3DHeightOffsetLabel"
+                                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBox Grid.Column="0"
+                                                                             Text="{Binding RuntimeConfiguration.Top3DHeightMeasurementOffsetMm, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalTextBoxConverter}}"
+                                                                             Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                                                    <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                                                </Grid>
+                                                            </StackPanel>
+
+                                                            <StackPanel Grid.Column="1" Margin="3,0">
+                                                                <TextBlock x:Name="Sub_entry_ConfigTop3DWidthOffsetLabel"
+                                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBox Grid.Column="0"
+                                                                             Text="{Binding RuntimeConfiguration.Top3DWidthMeasurementOffsetMm, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalTextBoxConverter}}"
+                                                                             Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                                                    <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                                                </Grid>
+                                                            </StackPanel>
+
+                                                            <StackPanel Grid.Column="2" Margin="6,0,0,0">
+                                                                <TextBlock x:Name="Sub_entry_ConfigTop3DLengthOffsetLabel"
+                                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBox Grid.Column="0"
+                                                                             Text="{Binding RuntimeConfiguration.Top3DLengthMeasurementOffsetMm, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DecimalTextBoxConverter}}"
+                                                                             Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                                                    <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                                                </Grid>
+                                                            </StackPanel>
+                                                        </Grid>
+                                                        <TextBlock x:Name="Sub_entry_ConfigTop3DMeasurementOffsetsFormula"
+                                                                   Style="{StaticResource CardHintStyle}"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,8,0,0"/>
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <TextBlock Text="Top3D rerender result output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.Top3DRerenderResultOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Top3D point cloud output" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.Top3DPointCloudOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox Content="Save Top3D rendered 2D image"
+                                                          IsChecked="{Binding RuntimeConfiguration.SaveTop3DRendered2DImage}"
+                                                          Margin="0,0,0,8"/>
+                                                <CheckBox Content="Save Top3D range image"
+                                                          IsChecked="{Binding RuntimeConfiguration.SaveTop3DRangeImage}"
+                                                          Margin="0,0,0,8"/>
+                                                <CheckBox Content="Save Top3D point cloud CSV"
+                                                          IsChecked="{Binding RuntimeConfiguration.SaveTop3DPointCloudCsv}"
+                                                          Margin="0,0,0,8"/>
+                                                <CheckBox Content="Auto login administrator (demo mode)"
+                                                          IsChecked="{Binding RuntimeConfiguration.AutoLoginAdministratorForDemo}"
+                                                          Margin="0,0,0,8"/>
+                                                <CheckBox Content="Apply camera trigger delay at startup"
+                                                          IsChecked="{Binding RuntimeConfiguration.ApplyCameraTriggerDelayToHardwareAtStartup}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Auto-switch settings -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#FF5722" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="VisionPro display record paths" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Sub-record shown on each channel display and saved in the annotated image"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Channel 1 record path" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeLastRunViews.LastRunView1, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Channel 2 record path" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeLastRunViews.LastRunView2, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Channel 3 record path" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeLastRunViews.LastRunView3, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Channel 4 record path" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeLastRunViews.LastRunView4, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,16"/>
+
+                                                <TextBlock Text="Auto-switch settings" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Recipe auto-detection thresholds and scoring"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Size tolerance %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.SizeTolerancePercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Aspect ratio tolerance" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.AspectRatioTolerance, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Min image width (px)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.MinImageWidth, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Min image height (px)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.MinImageHeight, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Max consecutive failures" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.MaxConsecutiveFailures, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Minimum match score (0–1)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAutoSwitch.MinimumMatchScore, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox Content="Require size check"
+                                                          IsChecked="{Binding RuntimeAutoSwitch.RequireSizeCheck}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- System diagnostics thresholds -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#F44336" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Diagnostics thresholds" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="CPU / RAM / Disk percentages and temperature limits"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <CheckBox Content="Diagnostics enabled"
+                                                          IsChecked="{Binding RuntimeDiagnostics.Enabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock Text="Refresh interval (s)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.RefreshIntervalSeconds, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="CPU warning %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.CpuWarningPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="CPU critical %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.CpuCriticalPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="RAM warning %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.RamWarningPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="RAM critical %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.RamCriticalPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Disk warning %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskWarningPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Disk critical %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskCriticalPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox Content="Temperature monitoring enabled"
+                                                          IsChecked="{Binding RuntimeDiagnostics.TemperatureMonitoringEnabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigTemperatureProviderLabel"
+                                                           Text="Temperature provider"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <ComboBox ItemsSource="{Binding TemperatureProviderOptions}"
+                                                          SelectedItem="{Binding RuntimeDiagnostics.HardwareTemperatureProvider, UpdateSourceTrigger=PropertyChanged}"
+                                                          Background="{StaticResource InputBackgroundBrush}"
+                                                          BorderBrush="{StaticResource InputBorderBrush}"
+                                                          BorderThickness="1" Padding="8,6" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigTemperaturePollingLabel"
+                                                           Text="Hardware temperature polling (s)"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.HardwareTemperaturePollingSeconds, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigCpuTemperatureWarningLabel"
+                                                           Text="CPU temp warning (°C)"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.CpuTemperatureWarningC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigCpuTemperatureCriticalLabel"
+                                                           Text="CPU temp critical (°C)"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.CpuTemperatureCriticalC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Disk temp warning (°C)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskTemperatureWarningC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Disk temp critical (°C)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskTemperatureCriticalC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Memory temp warning (°C)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.MemoryTemperatureWarningC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Memory temp critical (°C)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.MemoryTemperatureCriticalC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigMotherboardTemperatureWarningLabel"
+                                                           Text="Motherboard temp warning (°C)"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.MotherboardTemperatureWarningC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigMotherboardTemperatureCriticalLabel"
+                                                           Text="Motherboard temp critical (°C)"
+                                                           Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.MotherboardTemperatureCriticalC, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                    </StackPanel>
+
+                                    <!-- Right column -->
+                                    <StackPanel Grid.Column="1" Margin="6,0,0,0">
+
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#11998e" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionApps"
+                                                           Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionAppsHint"
+                                                           Style="{StaticResource CardHintStyle}"
+                                                           Margin="0,0,0,12"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigAutomationLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.externalApp_automation, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigToolsLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.externalApp_tools, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigReportsLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.externalApp_reports, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigLogShowImageLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.LogshowImage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#f7b733" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionAutomation"
+                                                           Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionAutomationHint"
+                                                           Style="{StaticResource CardHintStyle}"
+                                                           Margin="0,0,0,12"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigBlockingAlarmOutputLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.BlockingAlarmOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigNonBlockingAlarmOutputLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.NonBlockingAlarmOutput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox x:Name="Sub_entry_ConfigAutoResumeLabel"
+                                                          IsChecked="{Binding RuntimeConfiguration.AutoResumeVisionWhenIdle}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigAutoResumeSecondsLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.AutoResumeVisionIdleSeconds, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigRetryCooldownLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.AutoResumeVisionRetryCooldownSeconds, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox x:Name="Sub_entry_ConfigAutoLogoutLabel"
+                                                          IsChecked="{Binding RuntimeConfiguration.AutoLogoutWhenIdle}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigAutoLogoutMinutesLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeConfiguration.AutoLogoutIdleMinutes, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#2196F3" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionDatabase"
+                                                           Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigSectionDatabaseHint"
+                                                           Style="{StaticResource CardHintStyle}"
+                                                           Margin="0,0,0,12"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDbHostLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.Host, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDbNameLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.Db, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDbUserLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.User, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDbPasswordLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.Password, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock x:Name="Sub_entry_ConfigDbPortLabel" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.port, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Auth plugin" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeMySqlConnection.AuthPlugin, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox Content="SSL disabled"
+                                                          IsChecked="{Binding RuntimeMySqlConnection.SslDisabled}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- IO / Ejection -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#607D8B" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="IO / Ejection" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Ejector timing parameters (hardware pulse)"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Expulsion offset (ms)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeIO.ExpulsionOffset, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Expulsion width (ms)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeIO.ExpWidth, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Delay (ms)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeIO.delay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Image save policy -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#4CAF50" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Image save policy" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Sampling rates and session counters for saved images"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Save defect %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.PercSaveDefect, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Save OK %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.PercSaveOk, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Session count" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.session, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Batch count" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.batch, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Image increment" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.Incremento_imagini, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Piece counter" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.pezzo, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Terms OK" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.Terms_OK, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Terms Fail" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeSaveImage.Terms_Fail, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- PowerFlex 525 -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#FF9800" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="PowerFlex 525" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="VFD drive connection and speed calibration"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <CheckBox Content="Enabled"
+                                                          IsChecked="{Binding RuntimePowerFlex.Enabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock Text="IP address" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.IpAddress, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Timeout (ms)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.TimeoutMs, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Poll interval (ms)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.PollIntervalMs, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="History file path" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.HistoryFilePath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="m/min per Hz" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.MetersPerMinutePerHz, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Drive pulley diameter (mm)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.DrivePulleyDiameterMm, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Gear ratio" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimePowerFlex.GearRatio, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- DB archive & auto-cleanup -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#795548" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="DB archive &amp; auto-cleanup" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Disk cleanup thresholds and database archiving policy"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <CheckBox Content="Auto-cleanup enabled"
+                                                          IsChecked="{Binding RuntimeDiagnostics.AutoCleanupEnabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock Text="Cleanup start %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskCleanupStartPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Cleanup target %" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DiskCleanupTargetPercent, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Cleanup cooldown (min)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.CleanupCooldownMinutes, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Max deleted folders/cycle" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.MaxDeletedFoldersPerCycle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <CheckBox Content="DB archive monitoring enabled"
+                                                          IsChecked="{Binding RuntimeDiagnostics.DatabaseArchiveMonitoringEnabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <CheckBox Content="DB archive auto-cleanup enabled"
+                                                          IsChecked="{Binding RuntimeDiagnostics.DatabaseArchiveAutoCleanupEnabled}"
+                                                          Margin="0,0,0,10"/>
+                                                <TextBlock Text="Archive table name" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveTableName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Archive timestamp column" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveTimestampColumn, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Cleanup start (MB)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveCleanupStartMb, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Cleanup target (MB)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveCleanupTargetMb, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Retention days" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveRetentionDays, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Delete batch size" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveDeleteBatchSize, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Archive cleanup cooldown (min)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeDiagnostics.DatabaseArchiveCleanupCooldownMinutes, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Analytics dashboard -->
+                                        <Border Style="{StaticResource ConfigSectionCardStyle}"
+                                                BorderBrush="#3F51B5" BorderThickness="3,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Analytics dashboard" Style="{StaticResource CardSectionLabelStyle}"/>
+                                                <TextBlock Text="Chart colors, refresh rate and visible card types"
+                                                           Style="{StaticResource CardHintStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Refresh (min)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAnalytics.RefreshMinutes, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Total bar color (hex)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAnalytics.TotalBarColor, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="Good bar color (hex)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAnalytics.GoodBarColor, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,10"/>
+                                                <TextBlock Text="No-good bar color (hex)" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <TextBox Text="{Binding RuntimeAnalytics.NoGoodBarColor, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PreferenceTextBoxStyle}" Margin="0,0,0,12"/>
+                                                <TextBlock Text="Card visibility" Style="{StaticResource ConfigFieldLabelStyle}"/>
+                                                <Border Background="#F0F4FA" CornerRadius="8" Padding="10,8">
+                                                    <ItemsControl ItemsSource="{Binding RuntimeAnalytics.Cards}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                                                    <CheckBox IsChecked="{Binding IsVisible, Mode=TwoWay}"
+                                                                              Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                                    <TextBlock Text="{Binding CardType}"
+                                                                               FontSize="12" VerticalAlignment="Center"
+                                                                               Foreground="#35516D"/>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+
+                                    </StackPanel>
+                                </Grid>
+                            </ScrollViewer>
+
+                            <!-- Info banner -->
+                            <Border Grid.Row="2"
+                                    Background="#E8F5E9" BorderBrush="#81C784" BorderThickness="1"
+                                    CornerRadius="12" Padding="14" Margin="0,12,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome Icon="InfoCircle" FontSize="18" Foreground="#2E7D32" Margin="0,0,10,0"/>
+                                    <TextBlock Name="Sub_entry_ConfigEditorInfo"
+                                               Foreground="#2E7D32" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <!-- ══════════════════════════════════════════════════
+                     CARD 3 — User Management  (Col 2)
+                ═══════════════════════════════════════════════════ -->
+                <Border x:Name="UserManagementCard"
+                        Grid.Column="2"
+                        Style="{StaticResource CardBorderStyle}"
+                        Visibility="{Binding IsAdministrator, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Card header -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource UserGradient}"
+                                CornerRadius="18,18,0,0" Padding="18,16">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="38" Height="38" CornerRadius="11" Background="#33FFFFFF" Margin="0,0,10,0">
+                                    <fa:FontAwesome Icon="Users" FontSize="18" Foreground="White"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Name="sub_entry_userManger"
+                                               FontSize="16" FontWeight="Bold" Foreground="White"/>
+                                    <TextBlock x:Name="Sub_entry_UserCardHint"
+                                               Margin="0,2,0,0" FontSize="10" Foreground="#FFF0DE"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Card content -->
+                        <StackPanel Grid.Row="1" Margin="18,16,18,18">
+
+                            <!-- New user form -->
+                            <TextBlock Name="Sub_entry_NewUser"
+                                       Style="{StaticResource CardSectionLabelStyle}"/>
+                            <TextBlock x:Name="Sub_entry_NewUserHint"
+                                       Style="{StaticResource CardHintStyle}"
+                                       Margin="0,0,0,14"/>
+
+                            <!-- Username -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:FontAwesome Grid.Column="0" Icon="User" FontSize="14"
+                                               Foreground="#888" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock x:Name="Sub_entry_Username"
+                                               Style="{StaticResource CardHintStyle}" Margin="0,0,0,3"/>
+                                    <TextBox Text="{Binding NewUsername}"
+                                             Style="{StaticResource PreferenceTextBoxStyle}"
+                                             Name="Sub_entry_User"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Password -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:FontAwesome Grid.Column="0" Icon="Lock" FontSize="14"
+                                               Foreground="#888" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock x:Name="Sub_entry_Password"
+                                               Style="{StaticResource CardHintStyle}" Margin="0,0,0,3"/>
+                                    <PasswordBox x:Name="PwdBox1"
+                                                 Background="{StaticResource InputBackgroundBrush}"
+                                                 BorderBrush="{StaticResource InputBorderBrush}"
+                                                 BorderThickness="1" Padding="10,7"
+                                                 PasswordChanged="PwdBox1_OnPasswordChanged"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Confirm password -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:FontAwesome Grid.Column="0" Icon="Lock" FontSize="14"
+                                               Foreground="#888" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock x:Name="Sub_entry_ConfirmPassword"
+                                               Style="{StaticResource CardHintStyle}" Margin="0,0,0,3"/>
+                                    <PasswordBox x:Name="PwdBox2"
+                                                 Background="{StaticResource InputBackgroundBrush}"
+                                                 BorderBrush="{StaticResource InputBorderBrush}"
+                                                 BorderThickness="1" Padding="10,7"
+                                                 PasswordChanged="PwdBox2_OnPasswordChanged"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Role -->
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:FontAwesome Grid.Column="0" Icon="IdBadge" FontSize="14"
+                                               Foreground="#888" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock x:Name="Sub_entry_Role"
+                                               Style="{StaticResource CardHintStyle}" Margin="0,0,0,3"/>
+                                    <ComboBox Name="Sub_entry_role"
+                                              ItemsSource="{Binding AvailableRoles}"
+                                              SelectedItem="{Binding SelectedRole}"
+                                              Background="{StaticResource InputBackgroundBrush}"
+                                              BorderBrush="{StaticResource InputBorderBrush}"
+                                              BorderThickness="1" Padding="8,6"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Add user button -->
+                            <Button Command="{Binding AddUserCommand}"
+                                    Background="#fc4a1a" Foreground="White"
+                                    Padding="14,9" Margin="0,0,0,20"
+                                    Style="{StaticResource PrimaryActionButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome Icon="UserPlus" FontSize="14" Foreground="White" Margin="0,0,7,0"/>
+                                    <TextBlock Name="Sub_entry_addUser" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- User list -->
+                            <TextBlock Name="Sub_Entry_existingUser"
+                                       Style="{StaticResource CardSectionLabelStyle}"/>
+                            <TextBlock x:Name="Sub_entry_UserListHint"
+                                       Style="{StaticResource CardHintStyle}"
+                                       Margin="0,0,0,10"/>
+
+                            <Border BorderBrush="#E0E0E0" BorderThickness="1"
+                                    CornerRadius="12" MaxHeight="230" Background="#FBFDFF">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding ExistingUsers}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="#EAF0F6" BorderThickness="0,0,0,1"
+                                                        Padding="12,9" Background="Transparent">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <fa:FontAwesome Grid.Column="0"
+                                                                        Icon="{Binding RoleIcon}"
+                                                                        FontSize="18"
+                                                                        Foreground="{Binding RoleColor}"
+                                                                        Margin="0,0,10,0"
+                                                                        VerticalAlignment="Center"/>
+
+                                                        <StackPanel Grid.Column="1">
+                                                            <TextBlock Text="{Binding Username}" FontWeight="SemiBold" FontSize="12"/>
+                                                            <Border Background="#F3F7FB" CornerRadius="8"
+                                                                    Padding="6,2" Margin="0,3,0,0" HorizontalAlignment="Left">
+                                                                <TextBlock Text="{Binding Role}"
+                                                                           FontSize="10"
+                                                                           Foreground="{Binding RoleColor}"/>
+                                                            </Border>
+                                                        </StackPanel>
+
+                                                        <Ellipse Grid.Column="2" Width="7" Height="7"
+                                                                 Fill="{Binding RoleColor}" Margin="0,0,8,0"/>
+
+                                                        <Button Grid.Column="3"
+                                                                Command="{Binding DataContext.DeleteUserCommand,
+                                                                          RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                CommandParameter="{Binding}"
+                                                                Background="Transparent" BorderThickness="0" Padding="4">
+                                                            <fa:FontAwesome Icon="Trash" FontSize="13" Foreground="#F44336"/>
+                                                        </Button>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+
+                            <Button Command="{Binding RefreshUsersCommand}"
+                                    Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Right" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome Icon="Refresh" FontSize="12" Margin="0,0,5,0"/>
+                                    <TextBlock Name="Sub_netry_updateList" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+        <!-- ── Loading overlay ──────────────────────────────────────── -->
+        <Border Grid.Row="0" Grid.RowSpan="2"
+                Background="#80FFFFFF"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"
+                CornerRadius="18">
+            <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="White" CornerRadius="16" Padding="24,20"
+                    BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="1">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressBar Width="50" Height="50"
+                                 IsIndeterminate="True"
+                                 Style="{StaticResource {x:Type ProgressBar}}"
+                                 Margin="0,0,0,14"/>
+                    <TextBlock x:Name="Sub_entry_LoadingPreferences"
+                               FontSize="15" Foreground="#38516B"/>
+                </StackPanel>
+            </Border>
+        </Border>
+
+    </Grid>
+</UserControl>

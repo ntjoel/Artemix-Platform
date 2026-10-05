@@ -1,0 +1,2195 @@
+﻿<UserControl x:Class="QtisVisionPanel.Views.RecipeManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:local="clr-namespace:QtisVisionPanel.Views"
+              xmlns:fa="http://schemas.fontawesome.io/icons/"
+              xmlns:converters="clr-namespace:QtisVisionPanel.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="900">
+    <UserControl.Resources>
+        <converters:BoolToYesNoConverter x:Key="BoolToYesNoConverter"/>
+        <converters:BoolToDbIconConverter x:Key="BoolToDbIconConverter"/>
+        <converters:RecipeTypeAbbreviationConverter x:Key="RecipeTypeAbbreviationConverter"/>
+        <converters:DecimalTextBoxConverter x:Key="DecimalTextBoxConverter"/>
+        
+        <converters:MeasurementLabelConverter x:Key="MeasurementLabelConverter"/>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <converters:RecipeStatusToColorConverter x:Key="StatusToColorConverter"/>
+        <converters:RecipeStatusToBorderColorConverter x:Key="StatusToBorderColorConverter"/>
+        
+        <converters:RecipeStatusToIconConverter x:Key="StatusToIconConverter"/>
+        <converters:RecipeStatusToIconColorConverter x:Key="StatusToIconColorConverter"/>
+        
+        <converters:RecipeImagePathConverter x:Key="RecipeImagePathConverter"/>
+        <converters:StatusToIconVisibilityConverter x:Key="StatusToIconVisibilityConverter"/>
+        <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter">
+            <converters:BooleanToOpacityConverter.TrueValue>1.0</converters:BooleanToOpacityConverter.TrueValue>
+            <converters:BooleanToOpacityConverter.FalseValue>0.5</converters:BooleanToOpacityConverter.FalseValue>
+        </converters:BooleanToOpacityConverter>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converters:MachineTypeToVisibilityConverter x:Key="MachineTypeToVisibilityConverter"/>
+
+        <SolidColorBrush x:Key="PageSurfaceBrush" Color="#EDF4FA"/>
+        <SolidColorBrush x:Key="PanelSurfaceBrush" Color="#F9FBFE"/>
+        <SolidColorBrush x:Key="PanelBorderBrush" Color="#D6E2EF"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#1F6FA7"/>
+        <SolidColorBrush x:Key="AccentSoftBrush" Color="#EAF3FB"/>
+        <SolidColorBrush x:Key="PrimaryTextBrush" Color="#19324B"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#6B7D91"/>
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#8CA0B3"/>
+
+        <Style x:Key="RecipeRuntimeValueHintStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="#1F6FA7"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="145,0,42,6"/>
+        </Style>
+
+        <Style x:Key="ShellColumnCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PanelSurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="0" Opacity="0.08" Color="#17324B"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="IndustrialWorkspaceStyle" TargetType="Border">
+            <Setter Property="Background" Value="#F4F8FC"/>
+            <Setter Property="BorderBrush" Value="#C7D5E3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style x:Key="SectionGroupBoxStyle" TargetType="GroupBox">
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#CBD8E5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0"
+                                        Background="#EDF3F8"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="0,0,0,1"
+                                        CornerRadius="6,6,0,0"
+                                        Padding="10,7">
+                                    <ContentPresenter ContentSource="Header"
+                                                      RecognizesAccessKey="True"
+                                                      TextElement.FontSize="13"
+                                                      TextElement.FontWeight="Bold"
+                                                      TextElement.Foreground="{StaticResource PrimaryTextBrush}"/>
+                                </Border>
+
+                                <ContentPresenter Grid.Row="1"
+                                                  Margin="{TemplateBinding Padding}"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ThresholdGroupBoxStyle" TargetType="GroupBox" BasedOn="{StaticResource SectionGroupBoxStyle}"/>
+
+        <Style x:Key="ThresholdItemStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="#E3EBF3"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="0,6,0,6"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+
+        <Style TargetType="GroupBox" BasedOn="{StaticResource SectionGroupBoxStyle}"/>
+
+        <Style TargetType="TextBox">
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Background" Value="#FCFEFF"/>
+            <Setter Property="BorderBrush" Value="#C8D7E6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Background" Value="#F3F6FA"/>
+                    <Setter Property="Foreground" Value="#607388"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#F3F6FA"/>
+                    <Setter Property="Foreground" Value="#8495A5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="Background" Value="#FCFEFF"/>
+            <Setter Property="BorderBrush" Value="#C8D7E6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="#165783"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="MinHeight" Value="38"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.92"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}"/>
+
+        <Style x:Key="ActionTileButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="MinHeight" Value="46"/>
+            <Setter Property="Padding" Value="10,7"/>
+        </Style>
+
+        <Style x:Key="RecipeCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="14" ShadowDepth="0" Opacity="0.06" Color="#17324B"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Background" Value="#DDE7F1"/>
+            <Setter Property="Foreground" Value="#2E7BCF"/>
+        </Style>
+
+        <Style TargetType="Thumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="#2E7BCF"
+                                CornerRadius="6"
+                                Margin="2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.92"/>
+                </Trigger>
+                <Trigger Property="IsDragging" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid Background="{StaticResource PageSurfaceBrush}" Margin="4">
+        <!-- Banner informativo per utenti in sola lettura -->
+     
+       
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.78*" MinWidth="240" MaxWidth="320"/>
+            <ColumnDefinition Width="1.45*" MinWidth="360"/>
+            <ColumnDefinition Width="1.02*" MinWidth="310" MaxWidth="410"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Colonna 1: Lista ricette e pulsanti -->
+      
+        <Border Grid.Column="0" Style="{StaticResource ShellColumnCardStyle}" Background="#F8FBFF">
+            <DockPanel LastChildFill="True">
+                <!-- Banner informativo per utenti in sola lettura -->
+                <Border Background="#FFF7D6" 
+                        BorderBrush="#F1D58A" 
+                        BorderThickness="1"
+                        CornerRadius="14"
+                        Padding="14,10"
+                        Margin="14,14,14,0"
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Visibility="{Binding ShowReadOnlyWarning, Converter={StaticResource BoolToVisibility}}"
+                        Panel.ZIndex="100">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <fa:ImageAwesome Icon="InfoCircle" 
+                                         Foreground="#856404" 
+                                         Width="18" 
+                                         Height="18" 
+                                         Margin="0,0,10,0"/>
+                        <TextBlock x:Name="Sub_entry_RecipeReadOnlyWarningText"
+                                   Text="{Binding RecipeReadOnlyWarningText}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#856404"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+                        <Button x:Name="Sub_entry_RecipeReadOnlyLoginButton" Content="Login" 
+                                Command="{Binding LoginCommand}"
+                                Margin="12,0,0,0"
+                                Padding="12,6"
+                                Background="#856404"
+                                BorderBrush="#6F5200"/>
+                    </StackPanel>
+                </Border>
+
+                
+               
+                <!-- Header con navigazione -->
+                <Border DockPanel.Dock="Top"
+                        Background="#F8FBFF"
+                        BorderBrush="#E2EAF3"
+                        BorderThickness="0,0,0,1"
+                        Padding="18,16"
+                        Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock x:Name="Sub_entry_RecipesAvailableTitleText" Text="Ricette disponibili"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryTextBrush}"/>
+                        <TextBlock x:Name="Sub_entry_RecipesAvailableCountText" Text="{Binding Recipes.Count, StringFormat='{}{0} ricette disponibili in archivio'}"
+                                   FontSize="12"
+                                   Foreground="{StaticResource SecondaryTextBrush}"
+                                   Margin="0,4,0,10"/>
+                        <TextBlock x:Name="Sub_entry_Navigation" FontWeight="SemiBold" FontSize="12" Foreground="#3F6B93"/>
+                        <TextBlock x:Name="Sub_entry_InfoRicetta" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                        <TextBlock x:Name="Sub_entry_InfoRicetta1" 
+                                  FontSize="10" FontStyle="Italic" Foreground="{StaticResource MutedTextBrush}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- Pulsanti in alto -->
+                <Border DockPanel.Dock="Top" Background="#FFFFFF" Padding="10,10,10,8" BorderBrush="#E2EAF3" BorderThickness="0,0,0,1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <Button x:Name="Sub_entry_RecipeLoadButton"
+        ToolTip="{Binding RecipeLoadToolTip}"
+        ToolTipService.ShowOnDisabled="True"
+        Command="{Binding LoadRecipeCommand}"
+        Grid.Row="0" Grid.Column="0"
+        Margin="0,0,5,6"
+        Background="#4CAF50"
+                               >
+
+                            <!-- ✅ Content sostituito -->
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="ShareSquare"
+                                                     Width="16" Height="16"
+                                                     Foreground="White"
+                                                     Margin="0,0,8,0"/>
+                                    <TextBlock x:Name="Sub_entry_RecipeLoadText" Text="Carica"
+                                               Foreground="White"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button.Content>
+
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource ActionTileButtonStyle}" TargetType="Button">
+                                    <Setter Property="Background" Value="#4CAF50"/>
+                                    <Setter Property="BorderBrush" Value="#3A8F41"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedRecipe}" Value="{x:Null}">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Setter Property="Opacity" Value="0.5"/>
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding SelectedRecipe.Status}" Value="InProduction">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Setter Property="Opacity" Value="0.5"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+
+                        <Button x:Name="Sub_entry_RecipeDeleteButton"
+                    ToolTip="{Binding RecipeDeleteToolTip}"
+                    ToolTipService.ShowOnDisabled="True"
+                    Command="{Binding DeleteRecipeCommand}" 
+                    Style="{StaticResource ActionTileButtonStyle}"
+                    Grid.Row="0" Grid.Column="1"
+                    Margin="5,0,0,6"
+                    Background="#F44336"
+                    BorderBrush="#C9382D"
+                                  IsEnabled="{Binding CanDeleteRecipe}">
+                            <!-- ✅ Content sostituito -->
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Trash"
+                                                     Width="16" Height="16"
+                                                     Foreground="White"
+                                                     Margin="0,0,8,0"/>
+                                    <TextBlock x:Name="Sub_entry_RecipeDeleteText" Text="Elimina"
+                                               Foreground="White"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="Sub_entry_RecipeSaveButton"
+                    ToolTip="{Binding RecipeSaveToolTip}"
+                    ToolTipService.ShowOnDisabled="True"
+                    Command="{Binding SaveRecipeCommand}" 
+                Style="{StaticResource ActionTileButtonStyle}"
+                Grid.Row="1" Grid.Column="0"
+                 Margin="0,0,5,0"
+                Background="#2196F3"
+                BorderBrush="#1976D2"
+                IsEnabled="{Binding CanSaveRecipeCommand}">
+
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Save"
+                                                     Width="16" Height="16"
+                                                     Foreground="White"
+                                                     Margin="0,0,8,0"/>
+                                    <TextBlock x:Name="Sub_entry_RecipeSaveText" Text="Salva"
+                                               Foreground="White"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="Sub_entry_RecipeDuplicateButton"
+                    ToolTip="{Binding RecipeDuplicateToolTip}"
+                    ToolTipService.ShowOnDisabled="True"
+                    Command="{Binding CopyRecipeCommand}" 
+                    Style="{StaticResource ActionTileButtonStyle}"
+                     Grid.Row="1" Grid.Column="1"
+                      Margin="5,0,0,0"
+                     Background="#FF9800"
+                     BorderBrush="#D98200"
+                                  IsEnabled="{Binding CanCreateRecipe}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Copy"
+                                                     Width="16" Height="16"
+                                                     Foreground="White"
+                                                     Margin="0,0,8,0"/>
+                                    <TextBlock x:Name="Sub_entry_RecipeDuplicateText" Text="Duplica"
+                                               Foreground="White"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+                </Border>
+                
+                <!-- Lista ricette -->
+                <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10">
+
+                    <ItemsControl x:Name="RecipesItemsControl" ItemsSource="{Binding Recipes}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource RecipeCardStyle}"
+                                        Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                        BorderBrush="{Binding Status, Converter={StaticResource StatusToBorderColorConverter}}"
+                                        Cursor="Hand"
+                                        MouseDown="RecipeCard_MouseDown">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="64"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Immagine della ricetta -->
+                                        <Border Grid.Column="0" 
+                                                Width="54"
+                                                Height="54"
+                                                Background="#FFFFFF"
+                                                BorderBrush="#D5E2EE"
+                                                BorderThickness="1"
+                                                CornerRadius="10">
+                                            <Grid>
+                                                <!-- Immagine della ricetta -->
+                                                <Image Stretch="UniformToFill">
+                                                    <Image.Style>
+                                                        <Style TargetType="Image">
+                                                            <Setter Property="Source" Value="{Binding ImagePath, Converter={StaticResource RecipeImagePathConverter}}"/>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+
+                                                <!-- Icona stato sovrapposta -->
+                                                <Border HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                        Margin="-6,-6,0,0"
+                                                        Background="White"
+                                                        BorderBrush="#D5E2EE"
+                                                        BorderThickness="1"
+                                                        CornerRadius="11"
+                                                        Width="22" Height="22"
+                                                        Visibility="{Binding Status, Converter={StaticResource StatusToIconVisibilityConverter}}">
+                                                    <TextBlock Text="{Binding Status, Converter={StaticResource StatusToIconConverter}}"
+                                                              Foreground="{Binding Status, Converter={StaticResource StatusToIconColorConverter}}"
+                                                              FontWeight="Bold"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center"
+                                                              FontSize="10"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Dettagli ricetta -->
+                                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="{Binding Name}" 
+                                                           FontWeight="Bold" 
+                                                           FontSize="13"
+                                                           Foreground="{StaticResource PrimaryTextBrush}"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,0,0,3"/>
+                                                <Border DockPanel.Dock="Right"
+                                                        Background="#17324B"
+                                                        CornerRadius="10"
+                                                        Padding="6,3"
+                                                        Margin="5,0,0,0">
+                                                    <TextBlock Text="{Binding RecipeType, Converter={StaticResource RecipeTypeAbbreviationConverter}}"
+                                                               Foreground="White"
+                                                               FontWeight="Bold"
+                                                               FontSize="10"/>
+                                                </Border>
+                                            </DockPanel>
+
+                                            <TextBlock Text="{Binding Dimensions}" 
+                                                       FontWeight="Bold" 
+                                                       FontSize="11"
+                                                       Foreground="#35526E"
+                                                       Margin="0,0,0,8"/>
+
+                                            <WrapPanel>
+                                                <Border Background="#FFFFFF"
+                                                        BorderBrush="#D9E5F0"
+                                                        BorderThickness="1"
+                                                        CornerRadius="8"
+                                                         Padding="6,3"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock>
+                                                        <Run Text="L " Foreground="{StaticResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                                                        <Run Text="{Binding ProductLength, StringFormat='{}{0}'}" Foreground="{StaticResource PrimaryTextBrush}" FontWeight="Bold"/>
+                                                    </TextBlock>
+                                                </Border>
+                                                <Border Background="#FFFFFF"
+                                                        BorderBrush="#D9E5F0"
+                                                        BorderThickness="1"
+                                                        CornerRadius="8"
+                                                         Padding="6,3"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock>
+                                                        <Run Text="D " Foreground="{StaticResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                                                        <Run Text="{Binding ProductWidth, StringFormat='{}{0}'}" Foreground="{StaticResource PrimaryTextBrush}" FontWeight="Bold"/>
+                                                    </TextBlock>
+                                                </Border>
+                                                <Border Background="#FFFFFF"
+                                                        BorderBrush="#D9E5F0"
+                                                        BorderThickness="1"
+                                                        CornerRadius="8"
+                                                         Padding="6,3"
+                                                        Margin="0,0,6,6">
+                                                    <TextBlock>
+                                                        <Run Text="ID " Foreground="{StaticResource SecondaryTextBrush}" FontWeight="SemiBold"/>
+                                                        <Run Text="{Binding DatabaseId}" Foreground="{StaticResource PrimaryTextBrush}" FontWeight="Bold"/>
+                                                    </TextBlock>
+                                                </Border>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+           
+        </Border>
+       
+        <!-- Colonna 2: Dettagli ricetta -->
+        <Border Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Style="{StaticResource IndustrialWorkspaceStyle}">
+            <ScrollViewer x:Name="RecipeWorkspaceScrollViewer"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="RecipeWorkspaceGrid"
+                      Margin="8"
+                      SizeChanged="RecipeWorkspace_SizeChanged">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="RecipeWorkspaceMainColumn" Width="1.8*"/>
+                        <ColumnDefinition x:Name="RecipeWorkspaceParameterColumn" Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid x:Name="RecipeWorkspaceMainPanel"
+                          Grid.Row="0"
+                          Grid.Column="0"
+                          Margin="0,0,5,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Card 1: Dettagli ricetta -->
+                    <GroupBox Grid.Row="0" Header="Panoramica" Margin="0,0,0,8" x:Name="Sub_entry_Cart_recipeInfo">
+                        <Grid Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="92"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="18"/>
+                                <ColumnDefinition Width="108"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Codice:" FontWeight="SemiBold" VerticalAlignment="Center" x:Name="Sub_entry_Code_recipe"/>
+                            <Border Grid.Row="0" Grid.Column="1" Background="#F3F6FA" BorderBrush="#C8D7E6" BorderThickness="1" Padding="8,6" Margin="0,0,0,7">
+                                <TextBlock Text="{Binding SelectedRecipe.DatabaseId, StringFormat='{}{0}'}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Grid.Row="0" Grid.Column="3" Text="Collega:" FontWeight="SemiBold" VerticalAlignment="Center" x:Name="Sub_entry_Recipe_path"/>
+                            <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SelectedRecipe.FilePath, Mode=OneWay}" IsReadOnly="True" Margin="0,0,0,7"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Nome:" FontWeight="SemiBold" VerticalAlignment="Center" x:Name="Sub_entry_Recipe_Name"/>
+                            <TextBox Grid.Row="1" Grid.Column="1"
+                                     Text="{Binding SelectedRecipe.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                     Margin="0,0,0,7"
+                                     IsEnabled="{Binding CanEditRecipe}"
+                                     ToolTip="Modifica il nome della ricetta. Verranno rinominati anche i file .vpp e .xml"
+                                     TextChanged="TextBox_TextChanged"/>
+                            <TextBlock Grid.Row="1" Grid.Column="3" Text="Configurazione:" FontWeight="SemiBold" VerticalAlignment="Center" Name="Sub_entry_RecipeConfig"/>
+                            <TextBox Grid.Row="1" Grid.Column="4"
+                                     Text="{Binding Configurazione, Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     Margin="0,0,0,7"
+                                     FontWeight="SemiBold"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Descrizione:" FontWeight="SemiBold" VerticalAlignment="Top" Margin="0,7,0,0" Name="Sub_entry_Recipe_descrption"/>
+                            <TextBox Grid.Row="2" Grid.Column="1"
+                                     Text="{Binding CurrentRecipeData.general_Info.RecipeDescription, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="54"
+                                     IsEnabled="{Binding CanEditRecipe}"
+                                     TextChanged="TextBox_TextChanged"/>
+                            <TextBlock Grid.Row="2" Grid.Column="3" Text="Tipo Macchina:" FontWeight="SemiBold" VerticalAlignment="Center" x:Name="Sub_entry_RecipeMachineType"/>
+                            <TextBox Grid.Row="2" Grid.Column="4"
+                                     Text="{Binding MachineType, Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     FontWeight="SemiBold"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Card 2: Proprietà del prodotto - Dinamica in base al MachineType -->
+                    <GroupBox Grid.Row="1" Header="Proprietà del prodotto" Margin="0,0,0,10" x:Name="Sub_entry_ProductInfoCart">
+                        <Grid>
+                            <!-- Template per Pacchi (MachineType = Packs) -->
+                            <Grid Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Packs}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="5">
+                                    <TextBlock Text="Altezza:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Height"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Height, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Larghezza:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Width"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Width, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditRecipe}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="5">
+                                    <TextBlock Text="Lunghezza:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Length"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Length, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Profondità:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Depth"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Depth, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Template per Rotoli (MachineType = Rolls) -->
+                            <Grid Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Rolls}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="5">
+                                    <TextBlock Text="Altezza Nominale:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Nominal_height"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Height, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Diametro Rotolo:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Roll_diameter"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Roll_Diameter, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Asse Rotolo:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Roll_axis"/>
+                                    <ComboBox SelectedItem="{Binding CurrentRecipeData.general_Info.Roll_Axis, UpdateSourceTrigger=PropertyChanged}"
+                                    Margin="0,0,0,10">
+                                        <ComboBoxItem>Orizzontale</ComboBoxItem>
+                                        <ComboBoxItem>Verticale</ComboBoxItem>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="5">
+                                    <TextBlock Text="Diametro Anima:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Core_diameter"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Core_Diameter, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Larghezza Nominale:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Nominal_width"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Width, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+
+                                    <TextBlock Text="Lunghezza Nominale:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Nominal_Length"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Length, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Template per 3DCheck -->
+                            <Grid Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=3DCheck}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="24"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+                                    <TextBlock Text="Altezza:" FontWeight="Bold" Margin="0,0,0,6" x:Name="Sub_entry_Height3DCheck"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 MinWidth="180"
+                                                 Text="{Binding CurrentRecipeData.general_Info.Product_Height, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"
+                                                 IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+                                    <TextBlock Text="Lunghezza:" FontWeight="Bold" Margin="0,0,0,6" x:Name="Sub_entry_Length3DCheck"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 MinWidth="180"
+                                                 Text="{Binding CurrentRecipeData.general_Info.Product_Length, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"
+                                                 IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+                                    <TextBlock Text="Larghezza:" FontWeight="Bold" Margin="0,6,0,6" x:Name="Sub_entry_Width3DCheck"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 MinWidth="180"
+                                                 Text="{Binding CurrentRecipeData.general_Info.Product_Width, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"
+                                                 IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Grid.Column="2" Margin="5">
+                                    <TextBlock Text="Profondità:" FontWeight="Bold" Margin="0,6,0,6" x:Name="Sub_entry_Depth3DCheck"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="50"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 MinWidth="180"
+                                                 Text="{Binding CurrentRecipeData.general_Info.Product_Depth, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"
+                                                 IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Template per Generico/Altri -->
+                            <Grid Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Other}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Margin="5">
+                                    <TextBlock Text="Larghezza:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Width1"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Width, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="5">
+                                    <TextBlock Text="Lunghezza:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_Length1"/>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="60"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0" Text="{Binding CurrentRecipeData.general_Info.Product_Length, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                 TextChanged="TextBox_TextChanged"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                        <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Card 3: Informazioni aggiuntive -->
+                    <GroupBox Grid.Row="2" Header="Informazioni aggiuntive" Margin="0,0,0,8" x:Name="Sub_entry_Additional_Inf">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.95*"/>
+                                <ColumnDefinition Width="1.05*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="3,2,8,2">
+                                <Button Content="Seleziona immagine" x:Name="Sub_entry_Select_Image_Button"
+                                Command="{Binding SelectImageCommand}"
+                                Margin="0,0,0,9" MaxWidth="170" Height="34"
+                                Style="{StaticResource ModernButtonStyle}"
+                                Background="#1F6FA7"
+                                BorderBrush="#165783"
+                                IsEnabled="{Binding CanEditProductInfo}"/>
+
+                                <TextBlock Text="Percorso immagine:" FontWeight="Bold" Margin="0,6,0,6"/>
+                                <TextBox Text="{Binding CurrentRecipeData.general_Info.Product_Image, UpdateSourceTrigger=PropertyChanged}" 
+                                 x:Name="Sub_entry_Select_Image_path"
+                                 ToolTip="Percorso dell'immagine del prodotto"  IsEnabled="{Binding CanEditProductInfo}"/>
+                                <TextBlock Text="L'immagine aiuta l'operatore a riconoscere subito la ricetta corretta."
+                                           Foreground="{StaticResource SecondaryTextBrush}"
+                                           FontSize="11"
+                                           TextWrapping="Wrap"
+                                           Margin="0,8,0,0"/>
+                            </StackPanel>
+
+                            <Border Grid.Column="1" Margin="8,2,3,2"
+                            BorderBrush="#D9E5F0" BorderThickness="1" Background="#FBFDFF"
+                            MinHeight="120" MaxHeight="165" CornerRadius="5">
+                                <Grid>
+                                    <!-- Immagine della ricetta con binding diretto -->
+                                    <Image x:Name="RecipeImage"
+           Stretch="Uniform" 
+           HorizontalAlignment="Center" 
+           VerticalAlignment="Center"
+           MaxWidth="230"
+           MaxHeight="150"
+          >
+                                        <Image.Source>
+                                            <Binding Path="SelectedRecipe.ImagePath" 
+                     Converter="{StaticResource RecipeImagePathConverter}"
+                     UpdateSourceTrigger="PropertyChanged"
+                     FallbackValue="{x:Null}"
+                     TargetNullValue="{x:Null}"/>
+                                        </Image.Source>
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedRecipe.ImagePath}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SelectedRecipe.ImagePath}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+
+                                    <!-- Placeholder quando non c'è immagine -->
+                                    <Border Visibility="{Binding SelectedRecipe.ImagePath, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=inverted}"
+            Background="White">
+                                        <TextBlock Text="Nessuna immagine selezionata" x:Name="NoImageText"
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   Foreground="{StaticResource SecondaryTextBrush}" 
+                   FontStyle="Italic"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </GroupBox>
+
+                    <StackPanel Grid.Row="3">
+                        <!-- Spunte raggruppate per vista camera che esegue il controllo.
+                             Il raggruppamento arriva dalla matrice configurata in Inspection
+                             Configuration: ogni ispezione compare UNA sola volta, sotto
+                             l'etichetta di tutte le viste che la applicano, perche' il flag
+                             della ricetta e' uno solo (e' una proprieta' del prodotto, non
+                             della camera). Un'ispezione che nessuna vista esegue finisce nel
+                             gruppo "Nessuna vista assegnata", cosi' resta evidente. -->
+                        <GroupBox Header="Ispezioni Abilitate" x:Name="Sub_entry_Inspection_Enable" Margin="0,0,0,8">
+                            <ItemsControl ItemsSource="{Binding InspectionViewGroups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,6">
+                                            <TextBlock Text="{Binding ViewName}"
+                                                       FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="#5C7A99" Margin="2,0,0,4"/>
+                                            <ItemsControl ItemsSource="{Binding Items}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="#F6FAFE"
+                                                                BorderBrush="#D8E5F1"
+                                                                BorderThickness="1"
+                                                                CornerRadius="4"
+                                                                Padding="8,4"
+                                                                Margin="0,0,7,7"
+                                                                MinWidth="138">
+                                                            <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              IsEnabled="{Binding DataContext.CanEditRecipe,
+                                                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              Margin="0"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </GroupBox>
+
+                        <GroupBox Header="Ispezioni che generano scarto" x:Name="Sub_entry_Ejection_Enable">
+                            <ItemsControl ItemsSource="{Binding EjectionViewGroups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,6">
+                                            <TextBlock Text="{Binding ViewName}"
+                                                       FontSize="11" FontWeight="SemiBold"
+                                                       Foreground="#5C7A99" Margin="2,0,0,4"/>
+                                            <ItemsControl ItemsSource="{Binding Items}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="#FFF8F1"
+                                                                BorderBrush="#F2D5B2"
+                                                                BorderThickness="1"
+                                                                CornerRadius="4"
+                                                                Padding="8,4"
+                                                                Margin="0,0,7,7"
+                                                                MinWidth="138">
+                                                            <CheckBox Content="{Binding Name}"
+                                                              IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              IsEnabled="{Binding DataContext.CanEditRecipe,
+                                                                                  RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              Margin="0"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </GroupBox>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Parametri di qualita e diagnostica ricetta. Su schermi compatti
+                     il pannello viene spostato sotto ai dati principali dal code-behind. -->
+                <Grid x:Name="RecipeWorkspaceParameterPanel"
+                      Grid.Row="0"
+                      Grid.Column="1"
+                      Margin="5,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Statistiche Database -->
+                    <GroupBox Grid.Row="0" Header="Statistiche Database" Margin="0,0,0,8" Name="Sub_entry_Cart_Db_inf">
+                        <Grid Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.15*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Presenza in Database:" FontWeight="SemiBold" Margin="0,4" Name="Sub_entry_CheckInDb"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding SelectedRecipe.ExistsInDatabase, Converter={StaticResource BoolToYesNoConverter}}"
+                                       FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" Margin="8,4,0,4"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="ID Database:" FontWeight="SemiBold" Margin="0,4" Name="Sub_entry_ID_Db"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1"
+                                       Text="{Binding SelectedRecipe.DatabaseId, StringFormat='{}{0}'}"
+                                       FontWeight="SemiBold" Margin="8,4,0,4"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Ultima Modifica:" FontWeight="SemiBold" Margin="0,4" Name="Sub_entry_LastModif"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1"
+                                       Text="{Binding SelectedRecipe.LastModified, StringFormat='dd/MM/yyyy HH:mm:ss'}"
+                                       TextWrapping="Wrap" Margin="8,4,0,4"/>
+                        </Grid>
+                    </GroupBox>
+
+                   
+                    <!-- SOGLIE DIMENSIONI (visualizzato solo per Packs) -->
+                    <GroupBox Grid.Row="2" Header="Tolleranze Dimensioni"  Name="Sub_entry_CartToll_dimenssion"
+                     Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Packs}"
+                     Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Altezza Nominale -->
+                            <Grid Grid.Row="0" Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Altezza Nominale:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_setting_altezza"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamSide.Min_Heigth_value, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Tolleranza Altezza -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Toll. Altezza:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_toll_altezza"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamSide.Heigth_toll, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- PARAMETRI CENTRATURA STAMPA (solo per Packs) -->
+                    <GroupBox Grid.Row="3" Header="Centratura Stampa" Name="Sub_entry_Print_Centering"
+                     Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Packs}"
+                     Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Valori nominali per i bordi -->
+                            <Grid Grid.Row="0" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Top:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Top"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamTop.TopValueToLogo, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Grid.Row="1" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Left:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Left"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamTop.LeftValueToLogo, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Grid.Row="2" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Right:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Right"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamTop.RigthValueToLogo, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Grid.Row="3" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Bottom:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_bottom"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamTop.BottomValueToLogo, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Tolleranza centratura -->
+                            <Grid Grid.Row="4" Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Tolleranza:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Toll_printcenterint"/>
+                                <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamTop.Print_centering_Toll, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                <TextBlock Grid.Column="2" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- SOGLIE ISPEZIONI TOP (aggiornate per Packs) -->
+                    <GroupBox Grid.Row="4" Header="Soglie Ispezioni TOP"  Name="Sub_entry_Top_Inspection_Thresholds"
+         Visibility="{Binding MachineType, Converter={StaticResource MachineTypeToVisibilityConverter}, ConverterParameter=Packs}"
+         Margin="0,0,0,10">
+                        <StackPanel>
+                            <!-- Viste che applicano queste tolleranze, dalla matrice di
+                                 Inspection Configuration. La tolleranza resta un valore unico
+                                 di ricetta: qui si dichiara solo da quali camere viene usata. -->
+                            <TextBlock Text="{Binding TopThresholdsViewLabel}"
+                                       FontSize="10" FontWeight="SemiBold" Foreground="#5C7A99"
+                                       Margin="0,0,0,6"/>
+                            <!-- Logo -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.logo, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Logo:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Logo"/>
+                                    <TextBox Grid.Column="1" 
+                         Text="{Binding CurrentRecipeData.recipeParamTop.LogoToll, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="%" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" 
+                           Text="{Binding CurrentRecipeData.recipeParamTop.LogoToll, StringFormat='≥{0:0.00}'}" 
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                           
+
+                            <!-- Open Flaps -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.OpenFlaps, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Area max. alette aperte:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Flaps"/>
+                                    <TextBox Grid.Column="1" 
+                         Text="{Binding CurrentRecipeData.recipeParamTop.MinAreaOpenFlas, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="mm²" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" 
+                           Text="{Binding CurrentRecipeData.recipeParamTop.MinAreaOpenFlas, StringFormat='≤{0:0.00}'}"
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Shape -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.ShapeTop, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Forma Nominale:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_ShapeValue"/>
+                                    <TextBox Grid.Column="1" 
+                         Text="{Binding CurrentRecipeData.recipeParamTop.ShapeValue, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="°" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" 
+                           Text="{Binding CurrentRecipeData.recipeParamTop.ShapeToll, StringFormat='±{0:0.00}'}" 
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                            <!-- Shape Tolerance -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.ShapeTop, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Toll. Forma:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Toll_shape"/>
+                                    <TextBox Grid.Column="1" 
+                         Text="{Binding CurrentRecipeData.recipeParamTop.ShapeToll, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" 
+                           Text="{Binding CurrentRecipeData.recipeParamTop.ShapeToll, StringFormat='±{0:0.00}'}" 
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <!-- SOGLIE ISPEZIONI SIDE (aggiornate per Packs) -->
+                    <GroupBox Grid.Row="5" Header="Soglie Ispezioni SIDE" Name="Sub_entry_Side_Inspection_Thresholds"
+         Visibility="{Binding CanShowSideInspectionThresholds, Converter={StaticResource BoolToVisibility}}"
+         Margin="0,0,0,10">
+                        <StackPanel>
+                            <TextBlock Text="{Binding SideThresholdsViewLabel}"
+                                       FontSize="10" FontWeight="SemiBold" Foreground="#5C7A99"
+                                       Margin="0,0,0,6"/>
+                            <!-- Sealing -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.Side_sealing, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Sigillatura:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center" Name="Sub_entry_Sealing"/>
+                                    <TextBox Grid.Column="1" 
+                         Text="{Binding CurrentRecipeData.recipeParamSide.MinAreaSealing, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="mm²" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3"
+                           Text="{Binding CurrentRecipeData.recipeParamSide.MinAreaSealing, StringFormat='≥{0:0.00}'}"
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Soglie di sigillatura specifiche per vista. Prima esisteva un
+                                 unico scalare condiviso fra SIDE e REAR, nonostante ottica,
+                                 distanza e inquadratura diverse. Zero = eredita la soglia SIDE
+                                 qui sopra, quindi le ricette esistenti non cambiano. -->
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.Side_sealing, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Sigillatura REAR:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1"
+                         Text="{Binding CurrentRecipeData.recipeParamSide.MinAreaSealingRear, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="mm²" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" Text="0 = usa SIDE"
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                            <Border Margin="0,3" Padding="5" Visibility="{Binding HasRightCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="Sigillatura RIGHT:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.recipeParamSide.MinAreaSealingRight, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                             TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="mm²" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,5"
+                Opacity="{Binding CurrentRecipeData.inspectionStatus.Side_sealing, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Sigillatura LEFT:" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1"
+                         Text="{Binding CurrentRecipeData.recipeParamSide.MinAreaSealingLeft, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTolerances}"/>
+                                    <TextBlock Grid.Column="2" Text="mm²" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="3" Text="0 = usa SIDE"
+                           Foreground="#666666" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </GroupBox>
+                    <!-- TRIGGER DELAY CONFIGURATION (solo per utenti Expert) -->
+                    <!-- ATTENZIONE: questo GroupBox non contiene solo i trigger delay. Si chiude
+                         a riga ~1859 e racchiude anche le correzioni runtime per ricetta:
+                         modalita' trigger camera, offset posizione camera e parametri MultiShot.
+                         La sua Visibility deve quindi restare quella di ruolo. La condizione
+                         CanShowTriggerDelaySection va applicata SOLO al blocco dei ritardi. -->
+                    <GroupBox Grid.Row="6" Header="Configurazione Trigger" Name="Sub_entry_Trigger_Config"
+          Visibility="{Binding CanEditTriggerDelay, Converter={StaticResource BoolToVisibility}}"
+          Margin="0,0,0,10">
+                        <StackPanel>
+                        <StackPanel x:Name="Sub_entry_TriggerDelayFields"
+                                    Visibility="{Binding CanShowTriggerDelaySection, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="Trigger Delay Top:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_TopTriggerDelayLabel"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" 
+                     Text="{Binding CurrentRecipeData.cameraSetting.TopCameraTriggerDelay, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="TextBox_TextChanged" 
+                     IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                <TextBlock Grid.Column="1" Text="μs" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <StackPanel Visibility="{Binding HasLeftCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Trigger Delay Left:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_SideTriggerDelayLabel"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" 
+                     Text="{Binding LeftCameraHardwareDelayUs, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="TextBox_TextChanged" 
+                     IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="1" Text="μs" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasRightCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Trigger Delay Right:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_RightTriggerDelayLabel"/>
+                                <TextBox Text="{Binding CurrentRecipeData.cameraSetting.RightCameraTriggerDelay, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding HasRearCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Trigger Delay Rear:" FontWeight="Bold" Margin="0,5"/>
+                                <TextBox Text="{Binding CurrentRecipeData.cameraSetting.RearCameraTriggerDelay, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasBottomCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Trigger Delay Bottom:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_BottomTriggerDelayLabel"/>
+                                <TextBox Text="{Binding CurrentRecipeData.cameraSetting.BottomCameraTriggerDelay, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasFrontCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="Trigger Delay Front:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_FrontTriggerDelayLabel"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" 
+                     Text="{Binding CurrentRecipeData.cameraSetting.FrontCameraTriggerDelay, StringFormat='{}{0:0}', UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="TextBox_TextChanged" 
+                     IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="1" Text="μs" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <TextBlock Text="Nota: Valori in microsecondi. Modifiche applicate al salvataggio." x:Name="Sub_entry_TriggerDelayNote"
+                   FontSize="9" FontStyle="Italic" Foreground="#666666" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                            <Separator Margin="0,14,0,12"/>
+                            <Expander x:Name="Sub_entry_RecipeCameraTriggersExpander" Header="Camera triggers for this recipe" IsExpanded="True" Margin="0,0,0,12">
+                                <StackPanel Margin="0,8,0,0">
+                                    <TextBlock x:Name="Sub_entry_RecipeCameraTriggersHint" Text="The board, channel and polarity remain global. Select only whether each camera trigger inherits, is enabled, or is disabled for this product."
+                                               FontSize="9" Foreground="#4B6178" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                    <Grid Visibility="{Binding HasTopCameraConfigured, Converter={StaticResource BoolToVisibility}}" Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="Sub_entry_RecipeTopTriggerModeLabel" Text="TOP trigger" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraTriggers.Top, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    </Grid>
+                                    <Grid Visibility="{Binding HasLeftCameraConfigured, Converter={StaticResource BoolToVisibility}}" Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="Sub_entry_RecipeLeftTriggerModeLabel" Text="{Binding LeftCameraTriggerLabel}" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding LeftCameraTriggerMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    </Grid>
+                                    <Grid Visibility="{Binding HasFrontCameraConfigured, Converter={StaticResource BoolToVisibility}}" Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="Sub_entry_RecipeFrontTriggerModeLabel" Text="FRONT trigger" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraTriggers.Front, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    </Grid>
+                                    <Grid Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="Sub_entry_RecipeRightTriggerModeLabel" Text="RIGHT trigger" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding RightCameraTriggerMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding HasRightCameraConfigured}"/>
+                                    </Grid>
+                                    <Grid Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="REAR trigger" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding RearCameraTriggerMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding HasRearCameraConfigured}"/>
+                                    </Grid>
+                                    <Grid Visibility="{Binding HasBottomCameraConfigured, Converter={StaticResource BoolToVisibility}}" Margin="0,3">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <TextBlock x:Name="Sub_entry_RecipeBottomTriggerModeLabel" Text="BOTTOM trigger" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                  SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraTriggers.Bottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Expander>
+                            <TextBlock x:Name="Sub_entry_RecipeRuntimeCorrectionsTitle"
+                                       Text="Correzioni posizione camera per ricetta"
+                                       FontWeight="Bold"
+                                       FontSize="13"
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="Sub_entry_RecipeRuntimeCorrectionsHint"
+                                       Text="La quota base resta globale nel setup macchina. Inserire qui solo la correzione positiva o negativa richiesta dal prodotto."
+                                       FontSize="9"
+                                       Foreground="#4B6178"
+                                       TextWrapping="Wrap"
+                                       Margin="0,0,0,10"/>
+                            <Border Background="#FFF8E8"
+                                    BorderBrush="#E3B341"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="7,5"
+                                    Margin="0,0,0,8"
+                                    Visibility="{Binding MachineRuntimeAdjustmentOverview.HasValidationErrors, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.ValidationSummary}"
+                                           Foreground="#805A00"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"/>
+                            </Border>
+
+                            <StackPanel Visibility="{Binding CanShowTopPositionAdjustment, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="145"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="42"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="Sub_entry_RecipeTopPositionOffsetLabel" Text="TOP offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80"
+                                             Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraPositions.TopOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged"
+                                             LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.TopPositionSummary}"
+                                           Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasLeftCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="145"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="42"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="Sub_entry_RecipeLeftPositionOffsetLabel" Text="LEFT offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80"
+                                             Text="{Binding LeftCameraOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged"
+                                             LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.LeftPositionSummary}"
+                                           Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasFrontCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="145"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="42"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="Sub_entry_RecipeFrontPositionOffsetLabel" Text="FRONT offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80"
+                                             Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraPositions.FrontOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged"
+                                             LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.FrontPositionSummary}"
+                                           Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasRightCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="145"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="42"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="Sub_entry_RecipeRightPositionOffsetLabel" Text="RIGHT offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80"
+                                             Text="{Binding RightCameraOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged"
+                                             LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RightPositionSummary}"
+                                           Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding HasRearCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="REAR offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80" Text="{Binding RearCameraOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Visibility="{Binding HasBottomCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="145"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="42"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="Sub_entry_RecipeBottomPositionOffsetLabel" Text="BOTTOM offset" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" MinWidth="80"
+                                             Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.CameraPositions.BottomOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}"
+                                             TextChanged="TextBox_TextChanged"
+                                             LostFocus="RecipeRuntimeAdjustment_LostFocus"
+                                             IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                    <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.BottomPositionSummary}"
+                                           Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                            </StackPanel>
+
+                            <Expander x:Name="Sub_entry_RecipeMultiShotCorrectionsExpander"
+                                      Header="Correzioni MultiShot per ricetta"
+                                      IsExpanded="False"
+                                      Margin="0,12,0,0">
+                                <StackPanel Margin="0,8,0,0">
+                                    <TextBlock x:Name="Sub_entry_RecipeMultiShotCorrectionsHint"
+                                               Text="Canale, impulso, intervallo minimo, calibrazione e limiti restano globali. La ricetta puo ereditare, abilitare o disabilitare il profilo e correggere geometria e numero scatti."
+                                               FontSize="9"
+                                               Foreground="#4B6178"
+                                               TextWrapping="Wrap"
+                                               Margin="0,0,0,8"/>
+
+                                    <StackPanel Visibility="{Binding CanShowSideLeftMultiShotAdjustment, Converter={StaticResource BoolToVisibility}}">
+                                        <TextBlock x:Name="Sub_entry_RecipeSideLeftMultiShotLabel" Text="SIDE / LEFT" FontWeight="Bold" Margin="0,6,0,4"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeSideLeftMultiShotModeLabel" Text="Mode" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1"
+                                                      ItemsSource="{Binding RecipeMultiShotModes}"
+                                                      DisplayMemberPath="DisplayName"
+                                                      SelectedValuePath="Value"
+                                                      SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.SideLeft.EnabledMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      DropDownClosed="RecipeMultiShotMode_DropDownClosed"
+                                                      IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.SideLeftModeSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}" Margin="145,0,0,6"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeSideLeftShotOffsetLabel" Text="Shot count delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.SideLeft.ShotCountOffset, UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="n." Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.SideLeftShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeSideLeftStepOffsetLabel" Text="Step delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.SideLeft.StepOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.SideLeftStepSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeSideLeftFirstShotOffsetLabel" Text="First shot delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.SideLeft.FirstShotOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.SideLeftFirstShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Visibility="{Binding CanShowRightRearMultiShotAdjustment, Converter={StaticResource BoolToVisibility}}">
+                                        <Separator Margin="0,4,0,7"/>
+                                        <TextBlock x:Name="Sub_entry_RecipeRightRearMultiShotLabel" Text="{Binding LegacyRightMultiShotRoleLabel}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeRightRearMultiShotModeLabel" Text="Mode" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                      SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.RightRear.EnabledMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RightRearModeSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}" Margin="145,0,0,6"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeRightRearShotOffsetLabel" Text="Shot count delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.RightRear.ShotCountOffset, UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="n." Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RightRearShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeRightRearStepOffsetLabel" Text="Step delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.RightRear.StepOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RightRearStepSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeRightRearFirstShotOffsetLabel" Text="First shot delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.RightRear.FirstShotOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RightRearFirstShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Visibility="{Binding HasRearCameraConfigured, Converter={StaticResource BoolToVisibility}}">
+                                        <Separator Margin="0,4,0,7"/>
+                                        <TextBlock Text="REAR MultiShot" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <TextBlock Text="Mode" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                      SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Rear.EnabledMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RearModeSummary}" Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                                            <TextBlock Text="Shot count delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Rear.ShotCountOffset, UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="n." VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RearShotSummary}" Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                                            <TextBlock Text="Step delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Rear.StepOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RearStepSummary}" Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3,0,8">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="145"/><ColumnDefinition Width="*"/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+                                            <TextBlock Text="First shot delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Rear.FirstShotOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.RearFirstShotSummary}" Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                    </StackPanel>
+
+                                    <StackPanel Visibility="{Binding CanShowBottomMultiShotAdjustment, Converter={StaticResource BoolToVisibility}}">
+                                        <Separator Margin="0,4,0,7"/>
+                                        <TextBlock x:Name="Sub_entry_RecipeBottomMultiShotLabel" Text="BOTTOM" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeBottomMultiShotModeLabel" Text="Mode" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Column="1" ItemsSource="{Binding RecipeMultiShotModes}" DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                                      SelectedValue="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Bottom.EnabledMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      DropDownClosed="RecipeMultiShotMode_DropDownClosed" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.BottomModeSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}" Margin="145,0,0,6"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeBottomShotOffsetLabel" Text="Shot count delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Bottom.ShotCountOffset, UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="n." Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.BottomShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeBottomStepOffsetLabel" Text="Step delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Bottom.StepOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.BottomStepSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="145"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="Sub_entry_RecipeBottomFirstShotOffsetLabel" Text="First shot delta" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding CurrentRecipeData.machineRuntimeAdjustments.MultiShot.Bottom.FirstShotOffsetMm, StringFormat='{}{0:0.###}', UpdateSourceTrigger=LostFocus}" TextChanged="TextBox_TextChanged" LostFocus="RecipeRuntimeAdjustment_LostFocus" IsEnabled="{Binding CanEditTriggerDelay}"/>
+                                            <TextBlock Grid.Column="2" Text="mm" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding MachineRuntimeAdjustmentOverview.BottomFirstShotSummary}"
+                                                   Style="{StaticResource RecipeRuntimeValueHintStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Row="7"
+                              Header="Tracciabilità Front"
+                              x:Name="Sub_entry_FrontTraceabilitySection"
+                              Visibility="{Binding CanShowFrontTraceabilitySection, Converter={StaticResource BoolToVisibility}}"
+                              Margin="0,0,0,10">
+                        <StackPanel>
+                            <CheckBox Content="Richiedi presenza tracciabilità"
+                                      x:Name="Sub_entry_TraceabilityRequiredLabel"
+                                      IsChecked="{Binding CurrentRecipeData.recipeParamFront.RequireTraceability, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Checked="InspectionCheckBox_Changed"
+                                      Unchecked="InspectionCheckBox_Changed"
+                                      IsEnabled="{Binding CanEditRecipe}"
+                                      Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Prefisso codice atteso:" FontWeight="Bold" Margin="0,5" x:Name="Sub_entry_ExpectedCodePrefixLabel"/>
+                            <TextBox Text="{Binding CurrentRecipeData.recipeParamFront.ExpectedCodePrefix, UpdateSourceTrigger=PropertyChanged}"
+                                     TextChanged="TextBox_TextChanged"
+                                     IsEnabled="{Binding CanEditRecipe}"/>
+                            <TextBlock Text="Lascia vuoto se il codice può variare liberamente."
+                                       x:Name="Sub_entry_ExpectedCodePrefixHint"
+                                       FontSize="9"
+                                       FontStyle="Italic"
+                                       Foreground="#666666"
+                                       TextWrapping="Wrap"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Grid.Row="8"
+                              Header="Top3D profilometer"
+                              x:Name="Sub_entry_ThreeDSection"
+                              Visibility="{Binding CanShowThreeDSection, Converter={StaticResource BoolToVisibility}}"
+                              Margin="0,0,0,10">
+                        <StackPanel>
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,5,0,8"
+                                    Opacity="{Binding CurrentRecipeData.inspectionStatus.ThreeDHeight, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Margin="0,0,0,8" VerticalAlignment="Center"
+                                               FontWeight="Bold" Text="Altezza 3D:" x:Name="Sub_entry_ThreeDHeightLabel"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DNominalLabel1" Text="Nominale"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="45"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.general_Info.Product_Height, StringFormat='{}{0:0.00}', Mode=OneWay}"
+                                                         IsReadOnly="True"
+                                                         ToolTip="Valore propagato dalle proprietà prodotto"/>
+                                                <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DToleranceLabel1" Text="Tolleranza"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="55"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.recipeParamTop3D.ThreeDHeightTolerance, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                         TextChanged="TextBox_TextChanged"
+                                                         IsEnabled="{Binding CanEditTolerances}"/>
+                                                <TextBlock Grid.Column="1" Text="± mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,8,0,8"
+                                    Opacity="{Binding CurrentRecipeData.inspectionStatus.ThreeDWidth, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Margin="0,0,0,8" VerticalAlignment="Center"
+                                               FontWeight="Bold" Text="Larghezza 3D:" x:Name="Sub_entry_ThreeDWidthLabel"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DNominalLabel2" Text="Nominale"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="45"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.general_Info.Product_Width, StringFormat='{}{0:0.00}', Mode=OneWay}"
+                                                         IsReadOnly="True"
+                                                         ToolTip="Valore propagato dalle proprietà prodotto"/>
+                                                <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DToleranceLabel2" Text="Tolleranza"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="55"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.recipeParamTop3D.ThreeDWidthTolerance, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                         TextChanged="TextBox_TextChanged"
+                                                         IsEnabled="{Binding CanEditTolerances}"/>
+                                                <TextBlock Grid.Column="1" Text="± mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,8,0,8"
+                                    Opacity="{Binding CurrentRecipeData.inspectionStatus.ThreeDLength, Converter={StaticResource BooleanToOpacityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Margin="0,0,0,8" VerticalAlignment="Center"
+                                               FontWeight="Bold" Text="Lunghezza 3D:" x:Name="Sub_entry_ThreeDLengthLabel"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DNominalLabel3" Text="Nominale"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="45"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.general_Info.Product_Length, StringFormat='{}{0:0.00}', Mode=OneWay}"
+                                                         IsReadOnly="True"
+                                                         ToolTip="Valore propagato dalle proprietà prodotto"/>
+                                                <TextBlock Grid.Column="1" Text="mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Margin="0,0,0,4" x:Name="Sub_entry_Top3DToleranceLabel3" Text="Tolleranza"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="55"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="90"
+                                                         Text="{Binding CurrentRecipeData.recipeParamTop3D.ThreeDLengthTolerance, StringFormat='{}{0:0.00}', UpdateSourceTrigger=PropertyChanged}"
+                                                         TextChanged="TextBox_TextChanged"
+                                                         IsEnabled="{Binding CanEditTolerances}"/>
+                                                <TextBlock Grid.Column="1" Text="± mm" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                             </Border>
+
+                            <Border Margin="0,8,0,0"
+                                    Padding="10"
+                                    Background="#F4F8FC"
+                                    BorderBrush="#C7D8E7"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                <StackPanel>
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock x:Name="Sub_entry_Top3DProfileTitle"
+                                                   DockPanel.Dock="Left"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   Foreground="#17324B"
+                                                   Text="Top3D profile"/>
+                                        <CheckBox x:Name="Sub_entry_Top3DProfileEnableLabel"
+                                                  DockPanel.Dock="Right"
+                                                  Margin="12,0,0,0"
+                                                  VerticalAlignment="Center"
+                                                  Content="Enable monitoring"
+                                                  IsChecked="{Binding CurrentRecipeData.recipeParamTop3D.ThreeDProfileEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Checked="InspectionCheckBox_Changed"
+                                                  Unchecked="InspectionCheckBox_Changed"
+                                                  IsEnabled="{Binding CanEditRecipe}"/>
+                                    </DockPanel>
+
+                                    <TextBlock x:Name="Sub_entry_Top3DProfileDescription"
+                                               Margin="0,6,0,10"
+                                               FontSize="10"
+                                               Foreground="#5A7088"
+                                               TextWrapping="Wrap"
+                                               Text="Bulge index = High Tail - Median across the full ROI. It does not locate the defect and never commands physical reject in this baseline."/>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock x:Name="Sub_entry_Top3DMinimumValidPixelsLabel"
+                                                       Margin="0,0,0,4"
+                                                       Text="Minimum valid pixels"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="32"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="78"
+                                                         Text="{Binding ThreeDProfileMinimumValidPixelsPercent, Converter={StaticResource DecimalTextBoxConverter}, UpdateSourceTrigger=LostFocus}"
+                                                         TextChanged="TextBox_TextChanged"
+                                                         IsEnabled="{Binding CanEditTolerances}"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Margin="5,0,0,0"
+                                                           VerticalAlignment="Center"
+                                                           Text="%"/>
+                                            </Grid>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock x:Name="Sub_entry_Top3DMaximumBulgeLabel"
+                                                       Margin="0,0,0,4"
+                                                       Text="Maximum bulge index"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="36"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0"
+                                                         MinWidth="78"
+                                                         Text="{Binding CurrentRecipeData.recipeParamTop3D.ThreeDHeightMaximumBulge, Converter={StaticResource DecimalTextBoxConverter}, UpdateSourceTrigger=LostFocus}"
+                                                         TextChanged="TextBox_TextChanged"
+                                                         IsEnabled="{Binding CanEditTolerances}"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Margin="5,0,0,0"
+                                                           VerticalAlignment="Center"
+                                                           Text="mm"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,8,0,8">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                               Margin="0,0,10,8"
+                                               VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               Text="Top3D primary view:"
+                                               x:Name="Sub_entry_Top3DPrimaryViewLabel"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1"
+                                             Margin="0,0,0,8"
+                                             Text="{Binding CurrentRecipeData.recipeParamTop3D.Top3DPrimaryLastRunView, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding CanEditRecipe}"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0"
+                                               Margin="0,0,10,0"
+                                               VerticalAlignment="Center"
+                                               FontWeight="Bold"
+                                               Text="Top2D secondary view:"
+                                               x:Name="Sub_entry_Top3DSecondaryViewLabel"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1"
+                                             Text="{Binding CurrentRecipeData.recipeParamTop3D.Top3DSecondaryLastRunView, UpdateSourceTrigger=PropertyChanged}"
+                                             IsEnabled="{Binding CanEditRecipe}"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </GroupBox>
+                    <!-- Quick Actions -->
+                    <GroupBox Grid.Row="9" Header="Azioni Rapide" Name="Sub_entry_Rapid_action">
+                        <StackPanel>
+
+                            <Button Content="🔍 Verifica Integrità" Margin="0,5" Name="Sub_entry_Check_Integrity_Button"
+                                    Click="CheckIntegrity_Click"
+                                    Background="#17324B"
+                                    BorderBrush="#102334"/>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+    </Border>
+    </Grid>
+</UserControl>

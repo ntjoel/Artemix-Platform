@@ -1,0 +1,1672 @@
+<UserControl x:Class="QtisVisionPanel.Views.UserControls.SystemDiagnosticsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:QtisVisionPanel.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="860"
+             d:DesignWidth="1360"
+             Background="#F4F8FC">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="PanelCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#D6E2F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="18" />
+        </Style>
+
+        <Style x:Key="MetricCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#D6E2F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="Margin" Value="0,0,14,0" />
+        </Style>
+
+        <Style x:Key="CaptionStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#62788F" />
+            <Setter Property="FontSize" Value="11" />
+        </Style>
+
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#102A43" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MinHeight="360" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="#142B46"
+                CornerRadius="22"
+                Padding="20,16"
+                Margin="0,0,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_PCDiagnosticsTitle"
+                               Text="PC Diagnostics"
+                               Foreground="White"
+                               FontSize="24"
+                               FontWeight="Bold" />
+                    <TextBlock x:Name="Sub_entry_PCDiagnosticsSubtitle"
+                               Text="CPU, RAM, mounted disks, archive retention and automatic cleanup control"
+                               Foreground="#BFD3EA"
+                               FontSize="13"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{Binding LastUpdatedDisplayText}"
+                               Foreground="#DCE7F5"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               Margin="0,0,16,0" />
+                    <Button x:Name="Sub_entry_EventMonitorButton"
+                            Content="Event Monitor"
+                            Command="{Binding OpenEventsCommand}"
+                            MinWidth="120"
+                            Height="34"
+                            Margin="0,0,10,0"
+                            Background="#173755"
+                            Foreground="White"
+                            BorderBrush="#2F84C2" />
+                    <Button x:Name="Sub_entry_SystemDiagnosticsRefreshButton"
+                            Content="Refresh"
+                            Command="{Binding RefreshCommand}"
+                            MinWidth="100"
+                            Height="34"
+                            Background="#2C79B8"
+                            Foreground="White"
+                            BorderBrush="#2C79B8" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.1*" />
+                <ColumnDefinition Width="1.1*" />
+                <ColumnDefinition Width="1.3*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_OverallHealthLabel" Text="Overall health" Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding OverallStatusText}" Style="{StaticResource ValueStyle}" Margin="0,4,0,0" />
+                    <Border Background="{Binding OverallStatusBrush}"
+                            Width="96"
+                            Height="8"
+                            CornerRadius="999"
+                            Margin="0,12,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_CpuLoadLabel" Text="CPU load" Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding CpuUsageText}" Style="{StaticResource ValueStyle}" Margin="0,4,0,0" />
+                    <ProgressBar Value="{Binding CpuUsagePercent, Mode=OneWay}"
+                                 Maximum="100"
+                                 Height="8"
+                                 Margin="0,12,0,0"
+                                 Foreground="#2C79B8"
+                                 Background="#E6EEF7" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_RamUsageLabel" Text="RAM usage" Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding MemoryUsageText}" Style="{StaticResource ValueStyle}" Margin="0,4,0,0" />
+                    <ProgressBar Value="{Binding MemoryUsagePercent, Mode=OneWay}"
+                                 Maximum="100"
+                                 Height="8"
+                                 Margin="0,12,0,0"
+                                 Foreground="#2E9E75"
+                                 Background="#E6EEF7" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" Style="{StaticResource MetricCardStyle}" Margin="0">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_ActiveAlertsLabel" Text="Active alerts" Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding ActiveAlertCount}" Style="{StaticResource ValueStyle}" FontSize="28" />
+                    <TextBlock Text="{Binding ActiveAlertSummary}"
+                               Foreground="#62788F"
+                               FontSize="11"
+                               Margin="0,6,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.25*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <TextBlock x:Name="Sub_entry_DatabaseArchiveTitle"
+                                   Text="Database archive"
+                                   Style="{StaticResource CaptionStyle}" />
+                        <TextBlock Text="{Binding DatabaseArchiveStatus.SizeText}"
+                                   Style="{StaticResource ValueStyle}"
+                                   Margin="0,4,0,0" />
+                        <TextBlock Text="{Binding DatabaseArchiveStatus.SummaryText}"
+                                   Foreground="#62788F"
+                                   FontSize="11"
+                                   Margin="0,8,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <Border Grid.Column="1"
+                            Background="{Binding DatabaseArchiveStatus.SeverityBrush}"
+                            Padding="10,4"
+                            CornerRadius="999"
+                            VerticalAlignment="Top">
+                        <TextBlock Text="{Binding DatabaseArchiveStatus.SeverityText}"
+                                   Foreground="White"
+                                   FontSize="11"
+                                   FontWeight="SemiBold" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_CpuTemperatureTitle"
+                               Text="CPU temperature"
+                               Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding HottestCpuTemperatureSensor.TemperatureText}"
+                               Style="{StaticResource ValueStyle}"
+                               Margin="0,4,0,0" />
+                    <TextBlock Text="{Binding HottestCpuTemperatureSensor.Name}"
+                               Foreground="#17324D"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding HottestCpuTemperatureSensor.Details}"
+                               Foreground="#62788F"
+                               FontSize="11"
+                               Margin="0,6,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_HottestDiskTemperatureTitle"
+                               Text="Hottest disk temperature"
+                               Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding HottestDiskTemperatureSensor.TemperatureText}"
+                               Style="{StaticResource ValueStyle}"
+                               Margin="0,4,0,0" />
+                    <TextBlock Text="{Binding HottestDiskTemperatureSensor.Name}"
+                               Foreground="#17324D"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding HottestDiskTemperatureSensor.Details}"
+                               Foreground="#62788F"
+                               FontSize="11"
+                               Margin="0,6,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" Style="{StaticResource MetricCardStyle}" Margin="0">
+                <StackPanel>
+                    <TextBlock x:Name="Sub_entry_MemoryTemperatureTitle"
+                               Text="System / memory temperature"
+                               Style="{StaticResource CaptionStyle}" />
+                    <TextBlock Text="{Binding MemoryTemperatureSensor.TemperatureText}"
+                               Style="{StaticResource ValueStyle}"
+                               Margin="0,4,0,0" />
+                    <TextBlock Text="{Binding MemoryTemperatureSensor.Name}"
+                               Foreground="#17324D"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding MemoryTemperatureSensor.Details}"
+                               Foreground="#62788F"
+                               FontSize="11"
+                               Margin="0,6,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Style="{StaticResource PanelCardStyle}"
+                    Margin="0,0,14,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock x:Name="Sub_entry_MountedDisksTitle"
+                                   Text="Mounted disks"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock Text="{Binding WorstDiskText}"
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0" />
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Drives}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#D6E2F0"
+                                            BorderThickness="1"
+                                            CornerRadius="14"
+                                            Background="#F8FBFE"
+                                            Padding="14"
+                                            Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Row="0" Grid.Column="0">
+                                                <TextBlock Text="{Binding DriveName}"
+                                                           Foreground="#102A43"
+                                                           FontSize="15"
+                                                           FontWeight="Bold" />
+                                                <TextBlock Text="{Binding CapacityText}"
+                                                           Foreground="#62788F"
+                                                           FontSize="11"
+                                                           Margin="0,2,0,0" />
+                                            </StackPanel>
+
+                                            <Border Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Background="{Binding SeverityBrush}"
+                                                    Padding="10,4"
+                                                    CornerRadius="999"
+                                                    VerticalAlignment="Top">
+                                                <TextBlock Text="{Binding SeverityText}"
+                                                           Foreground="White"
+                                                           FontSize="11"
+                                                           FontWeight="SemiBold" />
+                                            </Border>
+
+                                            <ProgressBar Grid.Row="1"
+                                                         Grid.ColumnSpan="2"
+                                                         Value="{Binding UsedPercent, Mode=OneWay}"
+                                                         Maximum="100"
+                                                         Height="10"
+                                                         Margin="0,12,0,8"
+                                                         Foreground="#2C79B8"
+                                                         Background="#E6EEF7" />
+
+                                            <Grid Grid.Row="2" Grid.ColumnSpan="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding UsageText}"
+                                                           Foreground="#17324D"
+                                                           FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding CleanupFoldersDisplay}"
+                                                           TextAlignment="Right"
+                                                           TextWrapping="Wrap"
+                                                           Foreground="#62788F"
+                                                           FontSize="11" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource PanelCardStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock x:Name="Sub_entry_ActivePcNotificationsTitle"
+                                   Text="Active PC notifications"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock x:Name="Sub_entry_ActivePcNotificationsHint"
+                                   Text="Critical and warning diagnostics are logged into tbllogevent"
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="{Binding ActiveAlertSummary}"
+                                   Foreground="#17324D"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,10" />
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding ActiveAlerts}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#D6E2F0"
+                                                BorderThickness="1"
+                                                CornerRadius="14"
+                                                Background="White"
+                                                Padding="14"
+                                                Margin="0,0,0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border Width="12"
+                                                        CornerRadius="999"
+                                                        Background="{Binding SeverityBrush}"
+                                                        Margin="0,0,12,0" />
+
+                                                <StackPanel Grid.Column="1">
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding Title}"
+                                                                   Foreground="#102A43"
+                                                                   FontWeight="Bold"
+                                                                   FontSize="14"
+                                                                   DockPanel.Dock="Left" />
+                                                        <Border Background="{Binding SeverityBrush}"
+                                                                CornerRadius="999"
+                                                                Padding="8,3"
+                                                                HorizontalAlignment="Right">
+                                                            <TextBlock Text="{Binding SeverityText}"
+                                                                       Foreground="White"
+                                                                       FontSize="10"
+                                                                       FontWeight="SemiBold" />
+                                                        </Border>
+                                                    </DockPanel>
+                                                    <TextBlock Text="{Binding Message}"
+                                                               Foreground="#36536E"
+                                                               Margin="0,8,0,0"
+                                                               TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding TimestampDisplay}"
+                                                               Foreground="#62788F"
+                                                               FontSize="11"
+                                                               Margin="0,8,0,0" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="4"
+                Style="{StaticResource PanelCardStyle}"
+                Margin="0,14,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1.1*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,14,0">
+                    <TextBlock x:Name="Sub_entry_CleanupFoldersTitle"
+                               Text="Cleanup folders"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#102A43" />
+                    <TextBlock Text="{Binding CleanupRootsText}"
+                               Margin="0,8,0,0"
+                               Foreground="#36536E"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                    <TextBlock x:Name="Sub_entry_CleanupPolicyTitle"
+                               Text="Cleanup policy"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#102A43" />
+                    <TextBlock Text="{Binding CleanupPolicyText}"
+                               Margin="0,8,0,0"
+                               Foreground="#36536E"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding LastCleanupText}"
+                               Margin="0,10,0,0"
+                               Foreground="#62788F"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock x:Name="Sub_entry_DatabaseArchivePolicyTitle"
+                               Text="Database archive policy"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#102A43" />
+                    <TextBlock Text="{Binding DatabaseArchiveStatus.PolicyText}"
+                               Margin="0,8,0,0"
+                               Foreground="#36536E"
+                               TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding DatabaseArchiveStatus.CleanupText}"
+                               Margin="0,10,0,0"
+                               Foreground="#62788F"
+                               TextWrapping="Wrap" />
+
+                    <TextBlock x:Name="Sub_entry_TemperatureSensorsTitle"
+                               Text="Temperature sensors"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Foreground="#102A43"
+                               Margin="0,14,0,0" />
+
+                    <ItemsControl ItemsSource="{Binding TemperatureSensors}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,6,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}"
+                                               Foreground="#36536E"
+                                               FontSize="12"
+                                               Margin="0,0,10,0"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding TemperatureText}"
+                                               Foreground="#102A43"
+                                               FontWeight="SemiBold"
+                                               FontSize="12" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="5"
+                Style="{StaticResource PanelCardStyle}"
+                Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Ottimizzazione timing IO/encoder (Fase 5)"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock Text="Analisi advisory del timing per camera. L'applicazione dei parametri richiede conferma e ruolo autorizzato (Installer/Administrator)."
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Content="Aggiorna"
+                            Command="{Binding RefreshTimingCommand}"
+                            MinWidth="100"
+                            Height="32"
+                            VerticalAlignment="Top"
+                            Background="#2C79B8"
+                            Foreground="White"
+                            BorderBrush="#2C79B8" />
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Raccomandazioni advisory -->
+                    <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                        <TextBlock Text="Raccomandazioni"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <TextBlock Text="Le raccomandazioni compaiono dopo un numero sufficiente di ispezioni. Sono advisory: non modificano nulla."
+                                   Foreground="#62788F"
+                                   FontSize="11"
+                                   Margin="0,0,0,8"
+                                   TextWrapping="Wrap" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="220">
+                            <ItemsControl ItemsSource="{Binding TimingAdvisories}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#D6E2F0"
+                                                BorderThickness="1"
+                                                CornerRadius="10"
+                                                Background="White"
+                                                Padding="10"
+                                                Margin="0,0,0,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Border Width="6"
+                                                        CornerRadius="999"
+                                                        Background="{Binding SeverityBrush}"
+                                                        Margin="0,0,10,0" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Message}"
+                                                           Foreground="#36536E"
+                                                           TextWrapping="Wrap" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+
+                    <!-- Parametri applicabili -->
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Parametri applicabili (conferma richiesta)"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <ItemsControl ItemsSource="{Binding TimingParameters}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#D6E2F0"
+                                            BorderThickness="1"
+                                            CornerRadius="10"
+                                            Background="#F8FBFE"
+                                            Padding="10"
+                                            Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Name}"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#102A43" />
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Foreground="#62788F"
+                                                       FontSize="11"
+                                                       Margin="0,2,0,0"
+                                                       Text="{Binding CurrentSummary}" />
+
+                                            <TextBox Grid.Row="0"
+                                                     Grid.RowSpan="2"
+                                                     Grid.Column="1"
+                                                     Width="66"
+                                                     Height="30"
+                                                     Margin="8,0"
+                                                     VerticalContentAlignment="Center"
+                                                     Text="{Binding TargetValue, UpdateSourceTrigger=PropertyChanged}" />
+
+                                            <Button Grid.Row="0"
+                                                    Grid.RowSpan="2"
+                                                    Grid.Column="2"
+                                                    Content="Applica"
+                                                    Width="78"
+                                                    Height="30"
+                                                    Command="{Binding DataContext.ApplyTimingParameterCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    IsEnabled="{Binding DataContext.CanApplyTimingParameters, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    Background="#2C79B8"
+                                                    Foreground="White"
+                                                    BorderBrush="#2C79B8" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="{Binding TimingApplyStatus}"
+                                   Foreground="#36536E"
+                                   FontSize="11"
+                                   Margin="0,6,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="6"
+                Style="{StaticResource PanelCardStyle}"
+                Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="Sub_entry_AiControlsTitle"
+                                   Text="AI controls"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock x:Name="Sub_entry_AiControlsHint"
+                                   Text="Enable and configure advisory AI services. Saving is reserved to Installer/Administrator."
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button x:Name="Sub_entry_AiReloadSettingsButton"
+                            Grid.Column="1"
+                            Content="Ricarica"
+                            Command="{Binding ReloadAiSettingsCommand}"
+                            MinWidth="90"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Top"
+                            Background="#173755"
+                            Foreground="White"
+                            BorderBrush="#2F84C2" />
+                    <Button x:Name="Sub_entry_AiSaveSettingsButton"
+                            Grid.Column="2"
+                            Content="Salva"
+                            Command="{Binding SaveAiSettingsCommand}"
+                            IsEnabled="{Binding CanApplyTimingParameters}"
+                            MinWidth="90"
+                            Height="32"
+                            VerticalAlignment="Top"
+                            Background="#2C79B8"
+                            Foreground="White"
+                            BorderBrush="#2C79B8" />
+                </Grid>
+
+                <Grid Grid.Row="1" IsEnabled="{Binding CanApplyTimingParameters}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1.3*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Colonna 1: abilitazione servizi -->
+                    <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                        <TextBlock x:Name="Sub_entry_AiServicesTitle"
+                                   Text="Services"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <CheckBox x:Name="Sub_entry_AiDataFoundationCheck"
+                                  Content="Data foundation"
+                                  IsChecked="{Binding AiSettings.DataFoundationCaptureEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiSpcDriftCheck"
+                                  Content="SPC / drift detection"
+                                  IsChecked="{Binding AiSettings.ProcessControlEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiPredictiveMaintenanceCheck"
+                                  Content="Predictive maintenance"
+                                  IsChecked="{Binding AiSettings.PredictiveMaintenanceEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiTrainingCollectionCheck"
+                                  Content="Training data collection"
+                                  IsChecked="{Binding AiSettings.TrainingDataCollectionEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiTimingOptimizerCheck"
+                                  Content="I/O timing optimizer"
+                                  IsChecked="{Binding AiSettings.IoTimingOptimizerEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiPerformanceMonitorCheck"
+                                  Content="AI performance monitor"
+                                  IsChecked="{Binding AiSettings.AiPerformanceMonitorEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiRecipeAdvisorCheck"
+                                  Content="Product/recipe advisor"
+                                  IsChecked="{Binding AiSettings.RecipeProductAdvisorEnabled}"
+                                  Margin="0,0,0,6" />
+                        <CheckBox x:Name="Sub_entry_AiHealthNotificationsCheck"
+                                  Content="Machine health notifications"
+                                  IsChecked="{Binding AiSettings.MachineHealthNotificationsEnabled}"
+                                  Margin="0,0,0,6" />
+                        <TextBlock x:Name="Sub_entry_AiHealthDependencyHint"
+                                   Text="Early warnings need SPC and/or predictive maintenance enabled. Critical warnings are sent immediately; the rest is sent as a digest."
+                                   Foreground="#62788F"
+                                   FontSize="10"
+                                   TextWrapping="Wrap"
+                                   Margin="18,0,0,6" />
+                        <Grid Margin="18,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="Sub_entry_AiHealthDigestMinutesLabel" Grid.Row="0" Grid.Column="0" Text="Digest (min)" Style="{StaticResource CaptionStyle}" VerticalAlignment="Center" Margin="0,0,8,4" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AiSettings.MachineHealthDigestIntervalMinutes}" Width="70" Height="26" Margin="0,0,0,4" />
+                            <TextBlock x:Name="Sub_entry_AiHealthCriticalEtaLabel" Grid.Row="1" Grid.Column="0" Text="Critical ETA (pcs)" Style="{StaticResource CaptionStyle}" VerticalAlignment="Center" Margin="0,0,8,4" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AiSettings.MachineHealthCriticalEtaProducts}" Width="70" Height="26" Margin="0,0,0,4" />
+                            <TextBlock x:Name="Sub_entry_AiHealthCriticalDiskLabel" Grid.Row="2" Grid.Column="0" Text="Critical disk (hours)" Style="{StaticResource CaptionStyle}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AiSettings.MachineHealthDiskCriticalHours}" Width="70" Height="26" />
+                        </Grid>
+
+                        <!-- Fase 9: canale Email/SMTP dei preallarmi -->
+                        <Separator Margin="0,10,0,8" Background="#E4EBF2" />
+                        <TextBlock x:Name="Sub_entry_AiEmailChannelTitle"
+                                   Text="Email / SMTP"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <CheckBox x:Name="Sub_entry_AiEmailEnabledCheck"
+                                  Content="Enabled"
+                                  IsChecked="{Binding AiSettings.EmailNotificationsEnabled}"
+                                  Margin="0,0,0,6" />
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.6*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock x:Name="Sub_entry_AiEmailHostLabel" Text="SMTP host" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.EmailSmtpHost, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="26" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock x:Name="Sub_entry_AiEmailPortLabel" Text="Port" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.EmailSmtpPort}" Height="26" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </Grid>
+                        <CheckBox x:Name="Sub_entry_AiEmailUseSslCheck"
+                                  Content="Use SSL/TLS"
+                                  IsChecked="{Binding AiSettings.EmailUseSsl}"
+                                  Margin="0,0,0,6" />
+                        <TextBlock x:Name="Sub_entry_AiEmailFromLabel" Text="From address" Style="{StaticResource CaptionStyle}" />
+                        <TextBox Text="{Binding AiSettings.EmailFromAddress, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="26" Margin="0,2,0,6" />
+                        <TextBlock x:Name="Sub_entry_AiEmailToLabel" Text="To (';' or ',' separated)" Style="{StaticResource CaptionStyle}" />
+                        <TextBox Text="{Binding AiSettings.EmailToAddresses, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="26" Margin="0,2,0,6" />
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock x:Name="Sub_entry_AiEmailUsernameLabel" Text="SMTP username" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.EmailSmtpUsername, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="26" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock x:Name="Sub_entry_AiEmailPasswordLabel" Text="SMTP password" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.EmailSmtpPassword, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="26" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </Grid>
+                        <Button x:Name="Sub_entry_AiTestEmailButton"
+                                Content="Invia email di prova"
+                                Command="{Binding TestEmailCommand}"
+                                MinWidth="150"
+                                Height="30"
+                                HorizontalAlignment="Left"
+                                Background="#173755"
+                                Foreground="White"
+                                BorderBrush="#2F84C2" />
+                        <TextBlock x:Name="Sub_entry_AiEmailHint"
+                                   Text="Password salvata in chiaro nel file di configurazione macchina, come le altre credenziali gia' presenti. Il pulsante di prova usa i valori digitati anche se non ancora salvati."
+                                   Foreground="#62788F"
+                                   FontSize="10"
+                                   TextWrapping="Wrap"
+                                   Margin="0,6,0,0" />
+                    </StackPanel>
+
+                    <!-- Colonna 2: classificatore ONNX -->
+                    <StackPanel Grid.Column="1" Margin="0,0,14,0">
+                        <TextBlock x:Name="Sub_entry_AiOnnxClassifierTitle"
+                                   Text="ONNX classifiers per camera (shadow-mode)"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <!-- Parte comune a tutte le camere: runtime Python, annullamento e stato del training -->
+                        <TextBlock x:Name="Sub_entry_AiTrainingRuntimeTitle"
+                                   Text="Training runtime"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,10,0,6" />
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,6">
+                                <TextBlock x:Name="Sub_entry_AiTrainingPythonPathLabel" Text="Python executable" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.DefectClassifierTrainingPythonPath, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="28"
+                                         Margin="0,2,0,0" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,6">
+                                <TextBlock x:Name="Sub_entry_AiTrainingOutputDirLabel" Text="Model output folder" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.DefectClassifierTrainingOutputDir, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="28"
+                                         Margin="0,2,0,0" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <TextBlock x:Name="Sub_entry_AiTrainingEpochsLabel" Text="Epochs" Style="{StaticResource CaptionStyle}" />
+                                    <TextBox Text="{Binding AiSettings.DefectClassifierTrainingEpochs, UpdateSourceTrigger=PropertyChanged}"
+                                             Width="72"
+                                             Height="28"
+                                             Margin="0,2,8,0" />
+                                </StackPanel>
+                                <Button x:Name="Sub_entry_AiTestPythonButton"
+                                        Content="Test Python"
+                                        Command="{Binding TestPythonCommand}"
+                                        MinWidth="105"
+                                        Height="30"
+                                        VerticalAlignment="Bottom"
+                                        Background="#173755"
+                                        Foreground="White"
+                                        BorderBrush="#2F84C2" />
+                                <Button x:Name="Sub_entry_AiCancelTrainingButton"
+                                        Content="Annulla"
+                                        Command="{Binding CancelTrainingCommand}"
+                                        MinWidth="80"
+                                        Height="30"
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Bottom"
+                                        Background="#8B3A3A"
+                                        Foreground="White"
+                                        BorderBrush="#8B3A3A" />
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock Text="{Binding TrainingStatus}"
+                                   Foreground="#17324D"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   TextWrapping="Wrap"
+                                   Margin="0,4,0,0" />
+                        <TextBlock x:Name="Sub_entry_AiOnnxInputSizeHint"
+                                   Text="These values are model resize dimensions, not native camera resolution. TOP and SIDE / LEFT use independent models and preprocessing."
+                                   Foreground="#62788F"
+                                   FontSize="10"
+                                   TextWrapping="Wrap"
+                                   Margin="0,6,0,0" />
+
+                        <TextBlock x:Name="Sub_entry_AiMinConfidenceHint"
+                                   Text="Above 0, a lower-confidence NOK becomes uncertain and is excluded from defects. Uncertain results remain visible in shadow statistics."
+                                   Foreground="#8194A8"
+                                   FontSize="10"
+                                   TextWrapping="Wrap"
+                                   Margin="0,4,0,0" />
+
+                        <Separator Margin="0,12,0,8" Background="#C7D6E5" />
+                        <!-- Classificatore camera TOP (immagine _T_) -->
+                        <Expander IsExpanded="{Binding TopClassifierCard.IsExpanded, Mode=TwoWay}">
+                            <Expander.Header>
+                                <TextBlock Text="{Binding TopClassifierCard.Title}"
+                                           FontWeight="SemiBold"
+                                           Foreground="#17324D" />
+                            </Expander.Header>
+                            <StackPanel Margin="0,6,0,0">
+                                <TextBlock Text="{Binding TopClassifierCard.PresenceText}"
+                                           Foreground="#62788F"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,6" />
+                                <CheckBox x:Name="Sub_entry_AiOnnxEnabledCheck"
+                                          Content="Enabled"
+                                          IsChecked="{Binding AiSettings.DefectClassifierEnabled}"
+                                          Margin="0,0,0,8" />
+                                <TextBlock x:Name="Sub_entry_AiOnnxModelPathLabel" Text="Model path (.onnx)" Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.DefectClassifierModelPath, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="28"
+                                         Margin="0,2,0,8" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxModelVersionLabel" Text="Model version" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierModelVersion, UpdateSourceTrigger=PropertyChanged}"
+                                                 Height="28"
+                                                 Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxModelNotesLabel" Text="Model notes" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierModelNotes, UpdateSourceTrigger=PropertyChanged}"
+                                                 Height="28"
+                                                 Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxInputWidthLabel" Text="Resize width" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierInputWidth}"
+                                                 Width="64" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxInputHeightLabel" Text="Resize height" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierInputHeight}"
+                                                 Width="64" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxNormalizeMeanLabel" Text="Norm. mean" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierNormalizeMean}"
+                                                 Width="72" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiOnnxNormalizeStdLabel" Text="Norm. std.dev." Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.DefectClassifierNormalizeStd}"
+                                                 Width="72" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="Sub_entry_AiOnnxGrayscaleCheck"
+                                              Grid.Column="4"
+                                              Content="Scala di grigi"
+                                              IsChecked="{Binding AiSettings.DefectClassifierGrayscale}"
+                                              VerticalAlignment="Bottom"
+                                              Margin="0,0,0,4" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock x:Name="Sub_entry_AiTopMinConfidenceLabel"
+                                               Text="Minimum NOK confidence (0-1, 0=off)"
+                                               Style="{StaticResource CaptionStyle}"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0" />
+                                    <TextBox Text="{Binding AiSettings.DefectClassifierMinConfidence}" Width="72" Height="26" />
+                                </StackPanel>
+                                <Button x:Name="Sub_entry_AiTrainModelButton"
+                                        Content="Addestra modello"
+                                        Command="{Binding TrainDefectClassifierCommand}"
+                                        MinWidth="130"
+                                        Height="30"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,8,0,0"
+                                        Background="#2C79B8"
+                                        Foreground="White"
+                                        BorderBrush="#2C79B8" />
+                                <TextBlock x:Name="Sub_entry_AiTrainModelHint"
+                                           Text="Addestra dal dataset raccolto (label.json) e crea defect_classifier_vN.onnx in C:\QtisVision\AI\Models. Richiede Python (torch, pillow, numpy) e macchina ferma. Il modello NON si attiva da solo: verifica i campi e premi Salva."
+                                           Foreground="#62788F"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Expander>
+
+                        <Separator Margin="0,12,0,8" Background="#C7D6E5" />
+                        <!-- Classificatore camera SIDE (immagine _F_ / _L_): modello e preprocessing propri -->
+                        <Expander IsExpanded="{Binding SideClassifierCard.IsExpanded, Mode=TwoWay}">
+                            <Expander.Header>
+                                <TextBlock Text="{Binding SideClassifierCard.Title}"
+                                           FontWeight="SemiBold"
+                                           Foreground="#17324D" />
+                            </Expander.Header>
+                            <StackPanel Margin="0,6,0,0">
+                                <TextBlock Text="{Binding SideClassifierCard.PresenceText}"
+                                           Foreground="#62788F"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,6" />
+                                <CheckBox x:Name="Sub_entry_AiSideEnabledCheck"
+                                          Content="Enabled"
+                                          IsChecked="{Binding AiSettings.SideDefectClassifierEnabled}"
+                                          Margin="0,0,0,8" />
+                                <TextBlock x:Name="Sub_entry_AiSideModelPathLabel"
+                                           Text="SIDE / LEFT model path (.onnx)"
+                                           Style="{StaticResource CaptionStyle}" />
+                                <TextBox Text="{Binding AiSettings.SideDefectClassifierModelPath, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="28"
+                                         Margin="0,2,0,8" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.4*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                        <TextBlock x:Name="Sub_entry_AiSideModelVersionLabel" Text="Model version" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierModelVersion, UpdateSourceTrigger=PropertyChanged}"
+                                                 Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock x:Name="Sub_entry_AiSideModelNotesLabel" Text="Model notes" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierModelNotes, UpdateSourceTrigger=PropertyChanged}"
+                                                 Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiSideInputWidthLabel" Text="Resize width" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierInputWidth}" Width="64" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiSideInputHeightLabel" Text="Resize height" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierInputHeight}" Width="64" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiSideNormalizeMeanLabel" Text="Norm. mean" Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierNormalizeMean}" Width="72" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                                        <TextBlock x:Name="Sub_entry_AiSideNormalizeStdLabel" Text="Norm. std.dev." Style="{StaticResource CaptionStyle}" />
+                                        <TextBox Text="{Binding AiSettings.SideDefectClassifierNormalizeStd}" Width="72" Height="28" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="Sub_entry_AiSideGrayscaleCheck"
+                                              Grid.Column="4"
+                                              Content="Grayscale"
+                                              IsChecked="{Binding AiSettings.SideDefectClassifierGrayscale}"
+                                              VerticalAlignment="Bottom"
+                                              Margin="0,0,0,4" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock x:Name="Sub_entry_AiSideMinConfidenceLabel"
+                                               Text="Minimum NOK confidence (0-1, 0=off)"
+                                               Style="{StaticResource CaptionStyle}"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,8,0" />
+                                    <TextBox Text="{Binding AiSettings.SideDefectClassifierMinConfidence}" Width="72" Height="26" />
+                                </StackPanel>
+                                <Button x:Name="Sub_entry_AiTrainSideModelButton"
+                                        Content="Addestra Side"
+                                        Command="{Binding TrainSideDefectClassifierCommand}"
+                                        MinWidth="130"
+                                        Height="30"
+                                        HorizontalAlignment="Left"
+                                        Margin="0,8,0,0"
+                                        Background="#2C79B8"
+                                        Foreground="White"
+                                        BorderBrush="#2C79B8" />
+                                <TextBlock x:Name="Sub_entry_AiTrainSideModelHint"
+                                           Text="Creates defect_classifier_side_vN.onnx from image _F_ / _L_ and labels.side. Stop production first, then verify the model and press Save to enable shadow-mode."
+                                           Foreground="#62788F"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,6,0,0" />
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- Classificatori delle altre camere (REAR/RIGHT, FRONT, BOTTOM): stessa
+                             struttura di SIDE, una card per camera. Aperte le camere del VPP attivo. -->
+                        <ItemsControl ItemsSource="{Binding AdditionalClassifierProfiles}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Separator Margin="0,12,0,8" Background="#C7D6E5" />
+                                        <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
+                                            <Expander.Header>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#17324D" />
+                                            </Expander.Header>
+                                            <StackPanel Margin="0,6,0,0">
+                                                <TextBlock Text="{Binding PresenceText}"
+                                                           Foreground="#62788F"
+                                                           FontSize="10"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,0,0,6" />
+                                                <CheckBox Content="{Binding DataContext.OnnxLabels.Enabled, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                          IsChecked="{Binding Profile.Enabled}"
+                                                          Margin="0,0,0,8" />
+                                                <TextBlock Text="{Binding ModelPathLabel}" Style="{StaticResource CaptionStyle}" />
+                                                <TextBox Text="{Binding Profile.ModelPath, UpdateSourceTrigger=PropertyChanged}"
+                                                         Height="28"
+                                                         Margin="0,2,0,8" />
+                                                <Grid Margin="0,0,0,8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*" />
+                                                        <ColumnDefinition Width="1.4*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.ModelVersion, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.ModelVersion, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.ModelNotes, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.ModelNotes, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.InputWidth, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.InputWidth}" Width="64" Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.InputHeight, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.InputHeight}" Width="64" Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.NormalizeMean, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.NormalizeMean}" Width="72" Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                                                        <TextBlock Text="{Binding DataContext.OnnxLabels.NormalizeStd, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                                        <TextBox Text="{Binding Profile.NormalizeStd}" Width="72" Height="28" Margin="0,2,0,0" />
+                                                    </StackPanel>
+                                                    <CheckBox Grid.Column="4"
+                                                              Content="{Binding DataContext.OnnxLabels.Grayscale, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              IsChecked="{Binding Profile.Grayscale}"
+                                                              VerticalAlignment="Bottom"
+                                                              Margin="0,0,0,4" />
+                                                </Grid>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <TextBlock Text="{Binding DataContext.OnnxLabels.MinConfidence, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                               Style="{StaticResource CaptionStyle}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,8,0" />
+                                                    <TextBox Text="{Binding Profile.MinConfidence}" Width="72" Height="26" />
+                                                </StackPanel>
+                                                <Button Content="{Binding TrainButtonText}"
+                                                        Command="{Binding DataContext.TrainCameraDefectClassifierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding CameraRole}"
+                                                        MinWidth="130"
+                                                        Height="30"
+                                                        Padding="10,0"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0,8,0,0"
+                                                        Background="#2C79B8"
+                                                        Foreground="White"
+                                                        BorderBrush="#2C79B8" />
+                                                <TextBlock Text="{Binding TrainHint}"
+                                                           Foreground="#62788F"
+                                                           FontSize="10"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,6,0,0" />
+                                            </StackPanel>
+                                        </Expander>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <!-- Colonna 3: retention dati -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock x:Name="Sub_entry_AiRetentionTitle"
+                                   Text="AI data retention (days, 0 = unlimited)"
+                                   FontWeight="SemiBold"
+                                   Foreground="#17324D"
+                                   Margin="0,0,0,8" />
+                        <TextBlock x:Name="Sub_entry_AiRetentionInspectionLabel" Text="Inspection measurements" Style="{StaticResource CaptionStyle}" />
+                        <TextBox Text="{Binding AiSettings.AiInspectionMeasurementRetentionDays}"
+                                 Width="80" Height="28" HorizontalAlignment="Left" Margin="0,2,0,8" />
+                        <TextBlock x:Name="Sub_entry_AiRetentionHealthLabel" Text="PC health snapshots" Style="{StaticResource CaptionStyle}" />
+                        <TextBox Text="{Binding AiSettings.AiHealthSnapshotRetentionDays}"
+                                 Width="80" Height="28" HorizontalAlignment="Left" Margin="0,2,0,8" />
+                        <TextBlock x:Name="Sub_entry_AiRetentionTrainingLabel" Text="Training samples" Style="{StaticResource CaptionStyle}" />
+                        <TextBox Text="{Binding AiSettings.AiTrainingSampleRetentionDays}"
+                                 Width="80" Height="28" HorizontalAlignment="Left" Margin="0,2,0,8" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Grid.Row="2"
+                           Text="{Binding AiSettingsStatus}"
+                           Foreground="#36536E"
+                           FontSize="11"
+                           Margin="0,8,0,0"
+                           TextWrapping="Wrap" />
+            </Grid>
+        </Border>
+
+        <!-- Fase 8: pannello preallarmi salute macchina -->
+        <Border Grid.Row="7"
+                Style="{StaticResource PanelCardStyle}"
+                Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="Sub_entry_AiEarlyWarningsTitle"
+                                   Text="Machine health early warnings"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock x:Name="Sub_entry_AiEarlyWarningsHint"
+                                   Text="Inspection and PC health drift detected before it becomes scrap or downtime. Advisory only: it does not stop the machine."
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button x:Name="Sub_entry_AiRefreshEarlyWarningsButton"
+                            Grid.Column="1"
+                            Content="Aggiorna"
+                            Command="{Binding RefreshEarlyWarningsCommand}"
+                            MinWidth="90"
+                            Height="32"
+                            VerticalAlignment="Top"
+                            Background="#173755"
+                            Foreground="White"
+                            BorderBrush="#2F84C2" />
+                </Grid>
+
+                <TextBlock x:Name="Sub_entry_AiNoEarlyWarningsText"
+                           Grid.Row="1"
+                           Text="Nessun preallarme registrato."
+                           Foreground="#62788F"
+                           FontSize="12"
+                           Margin="0,4,0,4">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasEarlyWarnings}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding EarlyWarnings}"
+                              Visibility="{Binding HasEarlyWarnings, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="0,0,0,1"
+                                    BorderBrush="#E4EBF2"
+                                    Padding="0,7">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Badge severita' -->
+                                    <Border Grid.Column="0"
+                                            CornerRadius="4"
+                                            Padding="7,2"
+                                            Margin="0,0,10,0"
+                                            VerticalAlignment="Top">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#2C79B8" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SeverityText}" Value="Critical">
+                                                        <Setter Property="Background" Value="#C0392B" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding SeverityText}" Value="Warning">
+                                                        <Setter Property="Background" Value="#D98E2F" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding SeverityText}"
+                                                   Foreground="White"
+                                                   FontSize="10"
+                                                   FontWeight="SemiBold" />
+                                    </Border>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding CategoryText}"
+                                               Foreground="#62788F"
+                                               FontSize="11"
+                                               VerticalAlignment="Top"
+                                               Margin="0,1,10,0" />
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="#17324D"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding SuggestedUpstreamCause}"
+                                                   Foreground="#62788F"
+                                                   FontSize="11"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,2,0,0" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3"
+                                                HorizontalAlignment="Right"
+                                                Margin="10,0,0,0">
+                                        <TextBlock Text="{Binding EtaText}"
+                                                   Foreground="#17324D"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Right" />
+                                        <TextBlock Text="{Binding DetectedAtLocalText}"
+                                                   Foreground="#8194A8"
+                                                   FontSize="10"
+                                                   HorizontalAlignment="Right"
+                                                   Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+
+        <!-- Fase 3: statistiche shadow-mode del classificatore ONNX -->
+        <Border Grid.Row="8"
+                Style="{StaticResource PanelCardStyle}"
+                Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock x:Name="Sub_entry_AiShadowStatsTitle"
+                                   Text="AI shadow-mode statistics"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="#102A43" />
+                        <TextBlock x:Name="Sub_entry_AiShadowStatsHint"
+                                   Text="ONNX comparison with VisionPro rules as reference. Moving window, advisory only."
+                                   Foreground="#62788F"
+                                   FontSize="12"
+                                   Margin="0,3,0,0"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button x:Name="Sub_entry_AiRefreshShadowStatsButton"
+                            Grid.Column="1"
+                            Content="Aggiorna"
+                            Command="{Binding RefreshShadowStatsCommand}"
+                            MinWidth="90"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Top"
+                            Background="#173755"
+                            Foreground="White"
+                            BorderBrush="#2F84C2" />
+                    <Button x:Name="Sub_entry_AiResetShadowStatsButton"
+                            Grid.Column="2"
+                            Content="Azzera"
+                            Command="{Binding ResetShadowStatsCommand}"
+                            IsEnabled="{Binding CanApplyTimingParameters}"
+                            MinWidth="80"
+                            Height="32"
+                            VerticalAlignment="Top"
+                            Background="#8B3A3A"
+                            Foreground="White"
+                            BorderBrush="#8B3A3A" />
+                </Grid>
+
+                <TextBlock x:Name="Sub_entry_AiNoShadowStatsText"
+                           Grid.Row="1"
+                           Text="Nessun dato: abilitare il classificatore ONNX e far passare pezzi con esiti OK e NOK."
+                           Foreground="#62788F"
+                           FontSize="12"
+                           Margin="0,4,0,4">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasAnyShadowStats}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <StackPanel Grid.Row="2"
+                            Visibility="{Binding HasShadowStats, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock x:Name="Sub_entry_AiTopShadowCameraLabel"
+                               Text="TOP camera (image _T_)"
+                               FontWeight="SemiBold"
+                               Foreground="#17324D"
+                               Margin="0,0,0,2" />
+                    <TextBlock Text="{Binding ShadowStats.ContextText}"
+                               Foreground="#53728F"
+                               FontSize="10"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,8" />
+                    <UniformGrid Columns="5" Margin="0,0,0,10">
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiTopShadowAgreementLabel" Text="Agreement" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding ShadowStats.AgreementText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiTopShadowNokRecallLabel" Text="Defect recall (NOK)" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding ShadowStats.NokRecallText}" Style="{StaticResource ValueStyle}" Foreground="#C0392B" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiTopShadowNokPrecisionLabel" Text="NOK precision" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding ShadowStats.NokPrecisionText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiTopShadowFalseAlarmsLabel" Text="False alarms" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding ShadowStats.FalseAlarmText}" Style="{StaticResource ValueStyle}" Foreground="#D98E2F" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock x:Name="Sub_entry_AiTopShadowMeanConfidenceLabel" Text="Mean confidence" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding ShadowStats.MeanConfidenceText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                    </UniformGrid>
+                    <TextBlock Text="{Binding ShadowStats.SummaryText}"
+                               Foreground="#36536E"
+                               FontSize="12" />
+                    <TextBlock x:Name="Sub_entry_AiShadowMetricHint"
+                               Text="Defect recall shows how many real defects the model catches. NOK precision shows how often a NOK prediction is correct."
+                               Foreground="#8194A8"
+                               FontSize="10"
+                               TextWrapping="Wrap"
+                               Margin="0,4,0,0" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="3"
+                            Margin="0,14,0,0"
+                            Visibility="{Binding HasSideShadowStats, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock x:Name="Sub_entry_AiSideShadowCameraLabel"
+                               Text="SIDE / LEFT camera (image _F_ / _L_)"
+                               FontWeight="SemiBold"
+                               Foreground="#17324D"
+                               Margin="0,0,0,2" />
+                    <TextBlock Text="{Binding SideShadowStats.ContextText}"
+                               Foreground="#53728F"
+                               FontSize="10"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,8" />
+                    <UniformGrid Columns="5" Margin="0,0,0,10">
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiSideShadowAgreementLabel" Text="Agreement" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding SideShadowStats.AgreementText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiSideShadowNokRecallLabel" Text="Defect recall (NOK)" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding SideShadowStats.NokRecallText}" Style="{StaticResource ValueStyle}" Foreground="#C0392B" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiSideShadowNokPrecisionLabel" Text="NOK precision" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding SideShadowStats.NokPrecisionText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock x:Name="Sub_entry_AiSideShadowFalseAlarmsLabel" Text="False alarms" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding SideShadowStats.FalseAlarmText}" Style="{StaticResource ValueStyle}" Foreground="#D98E2F" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock x:Name="Sub_entry_AiSideShadowMeanConfidenceLabel" Text="Mean confidence" Style="{StaticResource CaptionStyle}" />
+                            <TextBlock Text="{Binding SideShadowStats.MeanConfidenceText}" Style="{StaticResource ValueStyle}" />
+                        </StackPanel>
+                    </UniformGrid>
+                    <TextBlock Text="{Binding SideShadowStats.SummaryText}"
+                               Foreground="#36536E"
+                               FontSize="12" />
+                </StackPanel>
+
+                <!-- Statistiche shadow delle altre camere (REAR/RIGHT, FRONT, BOTTOM) -->
+                <ItemsControl Grid.Row="4" ItemsSource="{Binding AdditionalClassifierProfiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="0,14,0,0"
+                                        Visibility="{Binding HasStats, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="{Binding ShadowCameraTitle}"
+                                           FontWeight="SemiBold"
+                                           Foreground="#17324D"
+                                           Margin="0,0,0,2" />
+                                <TextBlock Text="{Binding Stats.ContextText}"
+                                           Foreground="#53728F"
+                                           FontSize="10"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8" />
+                                <UniformGrid Columns="5" Margin="0,0,0,10">
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding DataContext.OnnxLabels.Agreement, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                        <TextBlock Text="{Binding Stats.AgreementText}" Style="{StaticResource ValueStyle}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding DataContext.OnnxLabels.NokRecall, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                        <TextBlock Text="{Binding Stats.NokRecallText}" Style="{StaticResource ValueStyle}" Foreground="#C0392B" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding DataContext.OnnxLabels.NokPrecision, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                        <TextBlock Text="{Binding Stats.NokPrecisionText}" Style="{StaticResource ValueStyle}" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding DataContext.OnnxLabels.FalseAlarms, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                        <TextBlock Text="{Binding Stats.FalseAlarmText}" Style="{StaticResource ValueStyle}" Foreground="#D98E2F" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding DataContext.OnnxLabels.MeanConfidence, RelativeSource={RelativeSource AncestorType=UserControl}}" Style="{StaticResource CaptionStyle}" />
+                                        <TextBlock Text="{Binding Stats.MeanConfidenceText}" Style="{StaticResource ValueStyle}" />
+                                    </StackPanel>
+                                </UniformGrid>
+                                <TextBlock Text="{Binding Stats.SummaryText}"
+                                           Foreground="#36536E"
+                                           FontSize="12" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+    </Grid>
+    </ScrollViewer>
+</UserControl>

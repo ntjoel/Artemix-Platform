@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MachineRuntimeConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ConfigurationName>Standalone IO Template</ConfigurationName>
+  <ConfigurationVersion>1.0</ConfigurationVersion>
+  <LastUpdatedUtc>2026-03-16T00:00:00Z</LastUpdatedUtc>
+  <DigitalIoBoard>PCIE-1756-BE</DigitalIoBoard>
+  <EncoderBoard>PCIE-1884-AE</EncoderBoard>
+  <TriggerMode>Hybrid</TriggerMode>
+  <RejectMode>EncoderTracked</RejectMode>
+  <Notes>Configurable camera I/O template: photocell starts product tracking, encoder/virtual conveyor advances position, DO02 triggers TOP, DO01 triggers SIDE/LEFT, DO04 triggers REAR/RIGHT, DO05 triggers BOTTOM. DO00 is intentionally spare unless explicitly configured for diagnostics.</Notes>
+  <MachineInputs>
+    <MachineSignalDefinition>
+      <SignalCode>IN_PRODUCT_PHOTOCELL</SignalCode>
+      <Description>Photocell detecting product passage</Description>
+      <Direction>Input</Direction>
+      <Category>PresenceSensor</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DI00</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Master event for product tracking.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>IN_EXTERNAL_TRIGGER_ENABLE</SignalCode>
+      <Description>External trigger enable</Description>
+      <Direction>Input</Direction>
+      <Category>CameraTrigger</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DI01</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Used when camera shot is commanded by external logic.</Notes>
+    </MachineSignalDefinition>
+  </MachineInputs>
+  <MachineOutputs>
+   
+    <MachineSignalDefinition>
+      <SignalCode>OUT_CAMERA_SIDE_TRIGGER</SignalCode>
+      <Description>Camera Side hardware trigger pulse</Description>
+      <Direction>Output</Direction>
+      <Category>CameraTrigger</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO01</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Real trigger output for side camera and related illuminator enable chain.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_CAMERA_TOP_TRIGGER</SignalCode>
+      <Description>Camera Top hardware trigger pulse</Description>
+      <Direction>Output</Direction>
+      <Category>CameraTrigger</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO02</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Real trigger output for top camera and related illuminator enable chain.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_REJECT_SOLENOID</SignalCode>
+      <Description>Reject actuator command</Description>
+      <Direction>Output</Direction>
+      <Category>Reject</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO03</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Mono reject output.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_CAMERA_REAR_TRIGGER</SignalCode>
+      <Description>Camera Rear/Right hardware trigger pulse</Description>
+      <Direction>Output</Direction>
+      <Category>CameraTrigger</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO04</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Optional trigger output for rear camera used as right-side complementary view.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_CAMERA_BOTTOM_TRIGGER</SignalCode>
+      <Description>Camera Bottom hardware trigger pulse</Description>
+      <Direction>Output</Direction>
+      <Category>CameraTrigger</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO05</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Optional trigger output for bottom camera. Can be single-shot or MultiShot according to machine setup.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_GENERAL_ALARM</SignalCode>
+      <Description>General fault output to stack light or PLC</Description>
+      <Direction>Output</Direction>
+      <Category>Alarm</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO06</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>true</ReservedForRealSignal>
+      <Notes>Dedicated to blocking machine alarms.</Notes>
+    </MachineSignalDefinition>
+    <MachineSignalDefinition>
+      <SignalCode>OUT_HEARTBEAT</SignalCode>
+      <Description>Diagnostic heartbeat output for commissioning and board communication test</Description>
+      <Direction>Output</Direction>
+      <Category>Alarm</Category>
+      <Board>PCIE-1756-BE</Board>
+      <Channel>DO07</Channel>
+      <Polarity>ActiveHigh</Polarity>
+      <ReservedForRealSignal>false</ReservedForRealSignal>
+      <Notes>Dedicated blinking output for diagnostics. Prefer a spare channel or commissioning lamp.</Notes>
+    </MachineSignalDefinition>
+  </MachineOutputs>
+  <EncoderTemplates>
+    <EncoderConfigurationTemplate>
+      <AxisName>ENC_CONVEYOR_MAIN</AxisName>
+      <Board>PCIE-1884-AE</Board>
+      <Channel>Counter0</Channel>
+      <PulsesPerRevolution>2048</PulsesPerRevolution>
+      <MillimetersPerRevolution>100</MillimetersPerRevolution>
+      <MachineZeroLabel>INIZIO_TRASPORTO</MachineZeroLabel>
+      <PhotocellMachineOffsetMm>35.5</PhotocellMachineOffsetMm>
+      <TrackingMode>Quadrature x4</TrackingMode>
+      <TriggerOffsetMm>0</TriggerOffsetMm>
+      <RejectOffsetMm>350</RejectOffsetMm>
+      <Notes>Main conveyor reference. In virtual-conveyor mode product tracking starts from the photocell at 35.5 mm from machine zero.</Notes>
+    </EncoderConfigurationTemplate>
+  </EncoderTemplates>
+  <InterventionPoints>
+    <MachineInterventionPoint>
+      <PointCode>CAMERA_TRIGGER_TOP</PointCode>
+      <Description>Trigger camera top</Description>
+      <Enabled>true</Enabled>
+      <ReferenceCode>PRODUCT_ZERO</ReferenceCode>
+      <BaseOffsetMm>74</BaseOffsetMm>
+      <TrimOffsetMm>0</TrimOffsetMm>
+      <ActionType>TriggerCamera</ActionType>
+      <SignalCode>OUT_CAMERA_TOP_TRIGGER</SignalCode>
+      <PulseMs>40</PulseMs>
+      <IsStandard>true</IsStandard>
+      <Notes>Pulse TOP camera trigger at 74.0 mm from PRODUCT_ZERO. External wiring may use the same pulse to enable the illuminator.</Notes>
+    </MachineInterventionPoint>
+    <MachineInterventionPoint>
+      <PointCode>CAMERA_TRIGGER_SIDE</PointCode>
+      <Description>Trigger camera side</Description>
+      <Enabled>true</Enabled>
+      <ReferenceCode>PRODUCT_ZERO</ReferenceCode>
+      <BaseOffsetMm>76</BaseOffsetMm>
+      <TrimOffsetMm>0</TrimOffsetMm>
+      <ActionType>TriggerCamera</ActionType>
+      <SignalCode>OUT_CAMERA_SIDE_TRIGGER</SignalCode>
+      <PulseMs>40</PulseMs>
+      <IsStandard>true</IsStandard>
+      <Notes>Pulse SIDE camera trigger at 76.0 mm from PRODUCT_ZERO. External wiring may use the same pulse to enable the illuminator.</Notes>
+    </MachineInterventionPoint>
+    <MachineInterventionPoint>
+      <PointCode>REJECT</PointCode>
+      <Description>Reject intervention point</Description>
+      <Enabled>true</Enabled>
+      <ReferenceCode>PRODUCT_ZERO</ReferenceCode>
+      <BaseOffsetMm>350</BaseOffsetMm>
+      <TrimOffsetMm>0</TrimOffsetMm>
+      <ActionType>Reject</ActionType>
+      <SignalCode>OUT_REJECT_SOLENOID</SignalCode>
+      <PulseMs>80</PulseMs>
+      <IsStandard>true</IsStandard>
+      <Notes>Activates reject only for NOK products when they reach the real machine position.</Notes>
+    </MachineInterventionPoint>
+    <MachineInterventionPoint>
+      <PointCode>CAMERA_TRIGGER_REAR</PointCode>
+      <Description>Trigger camera rear/right</Description>
+      <Enabled>true</Enabled>
+      <ReferenceCode>PRODUCT_ZERO</ReferenceCode>
+      <BaseOffsetMm>76</BaseOffsetMm>
+      <TrimOffsetMm>0</TrimOffsetMm>
+      <ActionType>TriggerCamera</ActionType>
+      <SignalCode>OUT_CAMERA_REAR_TRIGGER</SignalCode>
+      <PulseMs>40</PulseMs>
+      <IsStandard>true</IsStandard>
+      <Notes>Pulse REAR/RIGHT camera trigger at the configured product position. For MultiShot this point defines the first shot position.</Notes>
+    </MachineInterventionPoint>
+    <MachineInterventionPoint>
+      <PointCode>CAMERA_TRIGGER_BOTTOM</PointCode>
+      <Description>Trigger camera bottom</Description>
+      <Enabled>true</Enabled>
+      <ReferenceCode>PRODUCT_ZERO</ReferenceCode>
+      <BaseOffsetMm>76</BaseOffsetMm>
+      <TrimOffsetMm>0</TrimOffsetMm>
+      <ActionType>TriggerCamera</ActionType>
+      <SignalCode>OUT_CAMERA_BOTTOM_TRIGGER</SignalCode>
+      <PulseMs>40</PulseMs>
+      <IsStandard>true</IsStandard>
+      <Notes>Pulse BOTTOM camera trigger at the configured product position. Can remain single-shot or be owned by the Bottom MultiShot profile.</Notes>
+    </MachineInterventionPoint>
+  </InterventionPoints>
+  <RuntimeBindings>
+    <UseEncoderTrigger>true</UseEncoderTrigger>
+    <TriggerSchedulingMode>VirtualConveyor</TriggerSchedulingMode>
+    <ProductPhotocellSignalCode>IN_PRODUCT_PHOTOCELL</ProductPhotocellSignalCode>
+    <ExternalTriggerEnableSignalCode>IN_EXTERNAL_TRIGGER_ENABLE</ExternalTriggerEnableSignalCode>
+    <CameraTriggerSignalCode>OUT_CAMERA_TOP_TRIGGER</CameraTriggerSignalCode>
+    <TopLightingSignalCode>OUT_CAMERA_TOP_TRIGGER</TopLightingSignalCode>
+    <SideLightingSignalCode>OUT_CAMERA_SIDE_TRIGGER</SideLightingSignalCode>
+    <RejectSignalCode>OUT_REJECT_SOLENOID</RejectSignalCode>
+    <GeneralAlarmSignalCode>OUT_GENERAL_ALARM</GeneralAlarmSignalCode>
+    <MainEncoderAxisCode>ENC_CONVEYOR_MAIN</MainEncoderAxisCode>
+    <HeartbeatOutputSignalCode>OUT_HEARTBEAT</HeartbeatOutputSignalCode>
+    <HeartbeatEnabled>true</HeartbeatEnabled>
+    <HeartbeatAutoStartOnRealHardware>true</HeartbeatAutoStartOnRealHardware>
+    <HeartbeatIntervalMs>500</HeartbeatIntervalMs>
+    <ProductQueueCapacity>200</ProductQueueCapacity>
+    <RejectPulseMs>80</RejectPulseMs>
+    <PhotocellDebounceMs>80</PhotocellDebounceMs>
+    <MinimumRetriggerGapMs>120</MinimumRetriggerGapMs>
+    <MultiShotCompanionMaxLagMs>15000</MultiShotCompanionMaxLagMs>
+    <TopTriggerBaseDelayMs>0</TopTriggerBaseDelayMs>
+    <SideTriggerBaseDelayMs>0</SideTriggerBaseDelayMs>
+    <TopTriggerPulseMs>40</TopTriggerPulseMs>
+    <SideTriggerPulseMs>40</SideTriggerPulseMs>
+    <LivePreviewIntervalMs>1000</LivePreviewIntervalMs>
+    <LivePreviewPulseMs>20</LivePreviewPulseMs>
+    <LivePreviewExposureUs>0</LivePreviewExposureUs>
+    <DataFoundationCaptureEnabled>false</DataFoundationCaptureEnabled>
+    <ProcessControlEnabled>false</ProcessControlEnabled>
+    <PredictiveMaintenanceEnabled>false</PredictiveMaintenanceEnabled>
+    <TrainingDataCollectionEnabled>false</TrainingDataCollectionEnabled>
+    <DefectClassifierEnabled>false</DefectClassifierEnabled>
+    <DefectClassifierModelPath></DefectClassifierModelPath>
+    <DefectClassifierModelVersion></DefectClassifierModelVersion>
+    <DefectClassifierModelNotes></DefectClassifierModelNotes>
+    <DefectClassifierInputWidth>224</DefectClassifierInputWidth>
+    <DefectClassifierInputHeight>224</DefectClassifierInputHeight>
+    <DefectClassifierGrayscale>false</DefectClassifierGrayscale>
+    <DefectClassifierNormalizeMean>0</DefectClassifierNormalizeMean>
+    <DefectClassifierNormalizeStd>255</DefectClassifierNormalizeStd>
+    <DefectClassifierMinConfidence>0</DefectClassifierMinConfidence>
+    <SideDefectClassifierEnabled>false</SideDefectClassifierEnabled>
+    <SideDefectClassifierModelPath></SideDefectClassifierModelPath>
+    <SideDefectClassifierModelVersion></SideDefectClassifierModelVersion>
+    <SideDefectClassifierModelNotes></SideDefectClassifierModelNotes>
+    <SideDefectClassifierInputWidth>224</SideDefectClassifierInputWidth>
+    <SideDefectClassifierInputHeight>224</SideDefectClassifierInputHeight>
+    <SideDefectClassifierGrayscale>false</SideDefectClassifierGrayscale>
+    <SideDefectClassifierNormalizeMean>0</SideDefectClassifierNormalizeMean>
+    <SideDefectClassifierNormalizeStd>255</SideDefectClassifierNormalizeStd>
+    <SideDefectClassifierMinConfidence>0</SideDefectClassifierMinConfidence>
+    <DefectClassifierTrainingPythonPath>python</DefectClassifierTrainingPythonPath>
+    <DefectClassifierTrainingOutputDir>C:\QtisVision\AI\Models</DefectClassifierTrainingOutputDir>
+    <DefectClassifierTrainingEpochs>20</DefectClassifierTrainingEpochs>
+    <IoTimingOptimizerEnabled>false</IoTimingOptimizerEnabled>
+    <AiPerformanceMonitorEnabled>false</AiPerformanceMonitorEnabled>
+    <RecipeProductAdvisorEnabled>false</RecipeProductAdvisorEnabled>
+    <MachineHealthNotificationsEnabled>false</MachineHealthNotificationsEnabled>
+    <MachineHealthDigestIntervalMinutes>480</MachineHealthDigestIntervalMinutes>
+    <MachineHealthCriticalEtaProducts>50</MachineHealthCriticalEtaProducts>
+    <MachineHealthDiskCriticalHours>24</MachineHealthDiskCriticalHours>
+    <AiInspectionMeasurementRetentionDays>180</AiInspectionMeasurementRetentionDays>
+    <AiHealthSnapshotRetentionDays>90</AiHealthSnapshotRetentionDays>
+    <AiTrainingSampleRetentionDays>0</AiTrainingSampleRetentionDays>
+    <LightingMode>TriggerWindow</LightingMode>
+    <PhotocellLightingBenchModeEnabled>false</PhotocellLightingBenchModeEnabled>
+    <VirtualConveyorEnabled>true</VirtualConveyorEnabled>
+    <VirtualConveyorSpeedMetersPerMinute>18</VirtualConveyorSpeedMetersPerMinute>
+    <VirtualConveyorUsePiecesPerMinute>false</VirtualConveyorUsePiecesPerMinute>
+    <VirtualConveyorPiecesPerMinute>120</VirtualConveyorPiecesPerMinute>
+    <VirtualConveyorProductPitchMm>150</VirtualConveyorProductPitchMm>
+    <EncoderCalibrationTachometerSpeedMetersPerMinute>40</EncoderCalibrationTachometerSpeedMetersPerMinute>
+  </RuntimeBindings>
+  <MachineMultiShotTrigger>
+    <Side>
+      <Enabled>false</Enabled>
+      <CameraRole>Side</CameraRole>
+      <DisplayName>Left</DisplayName>
+      <TriggerOutputName>OUT_CAMERA_SIDE_TRIGGER</TriggerOutputName>
+      <TriggerPulseMs>10</TriggerPulseMs>
+      <MinimumInterShotIntervalMs>30</MinimumInterShotIntervalMs>
+      <ShotCount>5</ShotCount>
+      <InitialOffsetPulses>0</InitialOffsetPulses>
+      <StepPulses>4500</StepPulses>
+      <MaxShotCount>12</MaxShotCount>
+      <SessionTimeoutMs>3000</SessionTimeoutMs>
+      <TargetLateTolerancePulses>500</TargetLateTolerancePulses>
+      <RequireMachineRunning>true</RequireMachineRunning>
+      <PositiveDirection>true</PositiveDirection>
+      <VisionProStitching>
+        <ToolBlockName>ImageStitching</ToolBlockName>
+        <ExpectedFramesInputName>expectedFrames</ExpectedFramesInputName>
+        <StepMmInputName>stepMm</StepMmInputName>
+        <MmPerPixelInputName>mmPerPixel</MmPerPixelInputName>
+        <StepMm>0</StepMm>
+        <MmPerPixel>0</MmPerPixel>
+      </VisionProStitching>
+      <DualIllumination>
+        <Enabled>false</Enabled>
+        <FrontFirst>true</FrontFirst>
+        <ExposureTimeUs>500</ExposureTimeUs>
+        <FrontOutputLine>Line3</FrontOutputLine>
+        <BackOutputLine>Line4</BackOutputLine>
+        <ActiveOutputSource>ExposureActive</ActiveOutputSource>
+        <DualIlluminationEnabledInputName>dualIlluminationEnabled</DualIlluminationEnabledInputName>
+        <FrontFirstInputName>frontFirst</FrontFirstInputName>
+      </DualIllumination>
+    </Side>
+    <Right>
+      <Enabled>false</Enabled>
+      <CameraRole>Rear</CameraRole>
+      <DisplayName>Right</DisplayName>
+      <TriggerOutputName>OUT_CAMERA_REAR_TRIGGER</TriggerOutputName>
+      <TriggerPulseMs>10</TriggerPulseMs>
+      <MinimumInterShotIntervalMs>30</MinimumInterShotIntervalMs>
+      <ShotCount>1</ShotCount>
+      <InitialOffsetPulses>0</InitialOffsetPulses>
+      <StepPulses>0</StepPulses>
+      <MaxShotCount>12</MaxShotCount>
+      <SessionTimeoutMs>3000</SessionTimeoutMs>
+      <TargetLateTolerancePulses>500</TargetLateTolerancePulses>
+      <RequireMachineRunning>true</RequireMachineRunning>
+      <PositiveDirection>true</PositiveDirection>
+      <VisionProStitching>
+        <ToolBlockName>ImageStitching</ToolBlockName>
+        <ExpectedFramesInputName>expectedFrames</ExpectedFramesInputName>
+        <StepMmInputName>stepMm</StepMmInputName>
+        <MmPerPixelInputName>mmPerPixel</MmPerPixelInputName>
+        <StepMm>0</StepMm>
+        <MmPerPixel>0</MmPerPixel>
+      </VisionProStitching>
+      <DualIllumination>
+        <Enabled>false</Enabled>
+        <FrontFirst>true</FrontFirst>
+        <ExposureTimeUs>500</ExposureTimeUs>
+        <FrontOutputLine>Line3</FrontOutputLine>
+        <BackOutputLine>Line4</BackOutputLine>
+        <ActiveOutputSource>ExposureActive</ActiveOutputSource>
+        <DualIlluminationEnabledInputName>dualIlluminationEnabled</DualIlluminationEnabledInputName>
+        <FrontFirstInputName>frontFirst</FrontFirstInputName>
+      </DualIllumination>
+    </Right>
+    <Bottom>
+      <Enabled>false</Enabled>
+      <CameraRole>Bottom</CameraRole>
+      <DisplayName>Bottom</DisplayName>
+      <TriggerOutputName>OUT_CAMERA_BOTTOM_TRIGGER</TriggerOutputName>
+      <TriggerPulseMs>10</TriggerPulseMs>
+      <MinimumInterShotIntervalMs>30</MinimumInterShotIntervalMs>
+      <ShotCount>1</ShotCount>
+      <InitialOffsetPulses>0</InitialOffsetPulses>
+      <StepPulses>0</StepPulses>
+      <MaxShotCount>12</MaxShotCount>
+      <SessionTimeoutMs>3000</SessionTimeoutMs>
+      <TargetLateTolerancePulses>500</TargetLateTolerancePulses>
+      <RequireMachineRunning>true</RequireMachineRunning>
+      <PositiveDirection>true</PositiveDirection>
+      <VisionProStitching>
+        <ToolBlockName>ImageStitching</ToolBlockName>
+        <ExpectedFramesInputName>expectedFrames</ExpectedFramesInputName>
+        <StepMmInputName>stepMm</StepMmInputName>
+        <MmPerPixelInputName>mmPerPixel</MmPerPixelInputName>
+        <StepMm>0</StepMm>
+        <MmPerPixel>0</MmPerPixel>
+      </VisionProStitching>
+      <DualIllumination>
+        <Enabled>false</Enabled>
+        <FrontFirst>true</FrontFirst>
+        <ExposureTimeUs>500</ExposureTimeUs>
+        <FrontOutputLine>Line3</FrontOutputLine>
+        <BackOutputLine>Line4</BackOutputLine>
+        <ActiveOutputSource>ExposureActive</ActiveOutputSource>
+        <DualIlluminationEnabledInputName>dualIlluminationEnabled</DualIlluminationEnabledInputName>
+        <FrontFirstInputName>frontFirst</FrontFirstInputName>
+      </DualIllumination>
+    </Bottom>
+  </MachineMultiShotTrigger>
+</MachineRuntimeConfiguration>
+

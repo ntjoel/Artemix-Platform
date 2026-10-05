@@ -1,0 +1,15 @@
+Area,SignalCode,Direction,Category,Board,Channel,ElectricalLevel,Polarity,FunctionDescription,MachineAction,Notes
+Feeding,IN_PRODUCT_PHOTOCELL,Input,PresenceSensor,PCIE-1756-BE,DI00,24VDC,ActiveHigh,Rilevazione prodotto in ingresso,Apre ciclo tracking prodotto,Da confermare in campo
+Spare,OUT_SPARE_DO00,Output,Lighting,PCIE-1756-BE,DO00,24VDC,ActiveHigh,Uscita libera,Non usare nel flusso camera attuale,Solo diagnostica esplicita
+Vision,OUT_CAMERA_SIDE_TRIGGER,Output,CameraTrigger,PCIE-1756-BE,DO01,24VDC,ActiveHigh,Trigger hardware camera side,Impulso da intervention point CAMERA_TRIGGER_SIDE,Catena enable illuminatore side se cablata esternamente
+Vision,OUT_CAMERA_TOP_TRIGGER,Output,CameraTrigger,PCIE-1756-BE,DO02,24VDC,ActiveHigh,Trigger hardware camera top,Impulso da intervention point CAMERA_TRIGGER_TOP,Catena enable illuminatore top se cablata esternamente
+Vision,IN_EXTERNAL_TRIGGER_ENABLE,Input,CameraTrigger,PCIE-1756-BE,DI01,24VDC,ActiveHigh,Consenso trigger esterno,Selezione modo trigger,Da usare se PLC padrone ciclo
+Reject,OUT_REJECT_SOLENOID,Output,Reject,PCIE-1756-BE,DO03,24VDC,ActiveHigh,Comando scarto monoattuatore,Espulsione prodotto NOK,Default mono
+Reject,OUT_REJECT_OPEN,Output,Reject,PCIE-1756-BE,DO04,24VDC,ActiveHigh,Comando apertura scarto,Scarto bi-stabile,Usare solo se presente
+Reject,OUT_REJECT_CLOSE,Output,Reject,PCIE-1756-BE,DO05,24VDC,ActiveHigh,Comando chiusura scarto,Scarto bi-stabile,Usare solo se presente
+Reject,IN_REJECT_OPEN_FB,Input,Reject,PCIE-1756-BE,DI02,24VDC,ActiveHigh,Feedback scarto aperto,Diagnostica attuatore,Opzionale
+Reject,IN_REJECT_CLOSED_FB,Input,Reject,PCIE-1756-BE,DI03,24VDC,ActiveHigh,Feedback scarto chiuso,Diagnostica attuatore,Opzionale
+Alarm,OUT_GENERAL_ALARM,Output,Alarm,PCIE-1756-BE,DO06,24VDC,ActiveHigh,Uscita allarme macchina,Sirena/torretta/PLC,Aggrega fault bloccanti
+Alarm,OUT_WARNING_ALARM,Output,Alarm,PCIE-1756-BE,DO07,24VDC,ActiveHigh,Uscita warning non bloccante,Segnalazione preallarmi,Opzionale
+Encoder,ENC_CONVEYOR_MAIN,Derived,Encoder,PCIE-1884-AE,Counter0,LineDriver,NotApplicable,Encoder principale trasporto,Tracking posizione prodotto,AB quadrature
+Encoder,IN_ENCODER_Z,Input,Encoder,PCIE-1884-AE,DI100,24VDC,ActiveHigh,Eventuale zero encoder,Referenziazione asse,Opzionale

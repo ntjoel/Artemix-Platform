@@ -1,0 +1,720 @@
+<UserControl x:Class="QtisVisionPanel.Views.UserControls.DataInspectorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:QtisVisionPanel.Inspector.ViewModels"
+        mc:Ignorable="d"
+        d:DesignWidth="1560"
+        d:DesignHeight="920"
+        Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="PanelBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,16" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#D8E2EC" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="SummaryCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="MinWidth" Value="168" />
+            <Setter Property="MinHeight" Value="74" />
+            <Setter Property="Background" Value="#F8FBFE" />
+            <Setter Property="BorderBrush" Value="#D8E2EC" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="QuickFilterButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="78" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#D3DFEB" />
+            <Setter Property="Foreground" Value="#244A6E" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Padding" Value="16,0" />
+            <Setter Property="Background" Value="#1E78D7" />
+            <Setter Property="BorderBrush" Value="#1E78D7" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="FlatListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="Transparent"
+                                BorderThickness="0"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ThumbnailListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border Background="Transparent"
+                                BorderThickness="0"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="PieceCardTemplate" DataType="{x:Type vm:PieceCardViewModel}">
+            <Border x:Name="PieceCardBorder"
+                    Padding="12"
+                    Margin="0,0,0,8"
+                    MinHeight="104"
+                    CornerRadius="10"
+                    BorderBrush="#D9E4EF"
+                    BorderThickness="1"
+                    Background="#FBFDFF">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1F3554"
+                                   Text="{Binding Title}" />
+                        <TextBlock Margin="0,4,0,0"
+                                   Foreground="#50657D"
+                                   Text="{Binding Subtitle}" />
+                        <TextBlock Margin="0,8,0,0"
+                                   TextWrapping="Wrap"
+                                   Foreground="#6B8098"
+                                   MaxHeight="38"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{Binding DetailLine}" />
+                    </StackPanel>
+                    <Border Grid.Column="1"
+                            Padding="8,4"
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Top"
+                            CornerRadius="999"
+                            Background="{Binding StatusBrush}">
+                        <TextBlock FontSize="12"
+                                   FontWeight="SemiBold"
+                            Foreground="White"
+                            Text="{Binding StatusText}" />
+                    </Border>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                    <Setter TargetName="PieceCardBorder" Property="Background" Value="#F1F7FE" />
+                    <Setter TargetName="PieceCardBorder" Property="BorderBrush" Value="#8CB5E1" />
+                    <Setter TargetName="PieceCardBorder" Property="BorderThickness" Value="2" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ImageArtifactTemplate" DataType="{x:Type vm:ImageArtifactViewModel}">
+            <Border x:Name="ArtifactBorder"
+                    Width="126"
+                    Height="96"
+                    Padding="8"
+                    Margin="0,0,0,0"
+                    CornerRadius="8"
+                    BorderBrush="#D9E4EF"
+                    BorderThickness="1"
+                    Background="#FCFDFF">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="56" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="6"
+                            Background="#EFF4FA"
+                            BorderBrush="#D9E4EF"
+                            BorderThickness="1">
+                        <Grid>
+                            <Image x:Name="ArtifactPreview" Source="{Binding Image}" Stretch="UniformToFill" />
+                            <TextBlock x:Name="ArtifactPreviewPlaceholder"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="#7A90A8"
+                                       FontSize="12"
+                                       Text="{Binding InspectorVm.NoPreviewLabel, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        </Grid>
+                    </Border>
+                    <StackPanel Grid.Row="1" Margin="0,8,0,0">
+                        <TextBlock FontWeight="SemiBold"
+                                   Foreground="#1F3554"
+                                   TextAlignment="Center"
+                                   Text="{Binding Label}" />
+                        <TextBlock Margin="0,2,0,0"
+                                   FontSize="11"
+                                   Foreground="#5A7088"
+                                   TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Text="{Binding SecondaryLabel}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding HasPreview}" Value="True">
+                    <Setter TargetName="ArtifactPreviewPlaceholder" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                    <Setter TargetName="ArtifactBorder" Property="Background" Value="#F1F7FE" />
+                    <Setter TargetName="ArtifactBorder" Property="BorderBrush" Value="#8CB5E1" />
+                    <Setter TargetName="ArtifactBorder" Property="BorderThickness" Value="2" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="16"
+          DataContext="{Binding InspectorVm, RelativeSource={RelativeSource AncestorType=UserControl}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Style="{StaticResource PanelBorderStyle}"
+                Background="#17395C"
+                BorderBrush="#17395C">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock FontSize="28"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="{Binding InspectorTitle}" />
+                    <TextBlock Margin="0,8,0,0"
+                               FontSize="14"
+                               Foreground="#D7E9FF"
+                               TextWrapping="Wrap"
+                               MaxWidth="920"
+                               Text="{Binding PrototypeNote}" />
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        Padding="12"
+                        Margin="16,0,0,0"
+                        MinWidth="286"
+                        VerticalAlignment="Center"
+                        CornerRadius="12"
+                        Background="#244E79">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,16,0">
+                            <TextBlock Foreground="#D7E9FF"
+                                       FontSize="12"
+                                       Text="{Binding ViewModeLabel}" />
+                            <TextBlock Margin="0,4,0,0"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="White"
+                                       Text="{Binding DataSourceMode}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right">
+                            <TextBlock Foreground="#D7E9FF"
+                                       FontSize="12"
+                                       Text="{Binding DatabaseLabel}"
+                                       TextAlignment="Right" />
+                            <StackPanel Margin="0,6,0,0"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <Ellipse Width="10"
+                                         Height="10"
+                                         Margin="0,0,8,0"
+                                         VerticalAlignment="Center"
+                                         Fill="{Binding ConnectionStatusBrush}" />
+                                <TextBlock FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="White"
+                                           Text="{Binding ConnectionStatusText}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Style="{StaticResource PanelBorderStyle}">
+                    <StackPanel>
+                        <TextBlock FontSize="22"
+                                   FontWeight="SemiBold"
+                                   Foreground="#183A5B"
+                                   Text="{Binding RecentRejectsTitle}" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="#5B728A"
+                                   Text="{Binding RejectWindowSummary}" />
+
+                        <StackPanel Margin="0,16,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <WrapPanel Grid.Column="0"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,16,0">
+                                    <Button Style="{StaticResource QuickFilterButtonStyle}"
+                                            Command="{Binding SelectRecentRejectWindowCommand}"
+                                            CommandParameter="1"
+                                            Content="{Binding Last1Label}" />
+                                    <Button Style="{StaticResource QuickFilterButtonStyle}"
+                                            Command="{Binding SelectRecentRejectWindowCommand}"
+                                            CommandParameter="5"
+                                            Content="{Binding Last5Label}" />
+                                    <Button Style="{StaticResource QuickFilterButtonStyle}"
+                                            Command="{Binding SelectRecentRejectWindowCommand}"
+                                            CommandParameter="10"
+                                            Content="{Binding Last10Label}" />
+                                    <Button Style="{StaticResource QuickFilterButtonStyle}"
+                                            Command="{Binding SelectRecentRejectWindowCommand}"
+                                            CommandParameter="20"
+                                            Content="{Binding Last20Label}" />
+                                </WrapPanel>
+
+                                <Button Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource PrimaryActionButtonStyle}"
+                                        Command="{Binding RefreshCommand}"
+                                        Content="{Binding RefreshLabel}" />
+                            </Grid>
+
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Style="{StaticResource SummaryCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="12" Foreground="#6B8098" Text="{Binding ReviewWindowLabel}" />
+                                        <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding CurrentFilterLabel}" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="2" Style="{StaticResource SummaryCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="12" Foreground="#6B8098" Text="{Binding ItemsOnScreenLabel}" />
+                                        <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding PieceCountSummary}" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1" Style="{StaticResource PanelBorderStyle}" Margin="0">
+                    <ListBox ItemsSource="{Binding RecentRejectedPieces}"
+                             SelectedItem="{Binding SelectedPiece, Mode=TwoWay}"
+                             ItemTemplate="{StaticResource PieceCardTemplate}"
+                             ItemContainerStyle="{StaticResource FlatListBoxItemStyle}"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                </Border>
+            </Grid>
+
+            <ScrollViewer Grid.Column="2"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="0,0,4,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource SummaryCardStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="12" Foreground="#6B8098" Text="{Binding SelectedItemLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding SelectedPiece.Title}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource SummaryCardStyle}">
+                        <StackPanel>
+                            <TextBlock FontSize="12" Foreground="#6B8098" Text="{Binding ImagesAvailableLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding EvidenceCoverageSummary}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="4" Style="{StaticResource SummaryCardStyle}" Margin="0">
+                        <StackPanel>
+                            <TextBlock FontSize="12" Foreground="#6B8098" Text="{Binding ImagesMissingLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding MissingEvidenceSummary}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="1" Style="{StaticResource PanelBorderStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock FontSize="13" Foreground="#6B8098" Text="{Binding RecipeLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding SelectedPiece.RecipeName}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                            <TextBlock FontSize="13" Foreground="#6B8098" Text="{Binding ImageStatusLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding EvidenceSummary}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock FontSize="13" Foreground="#6B8098" Text="{Binding OperatorLabel}" />
+                            <TextBlock Margin="0,4,0,0" FontSize="16" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding SelectedPiece.OperatorText}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="2" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource PanelBorderStyle}" Margin="0">
+                        <StackPanel>
+                            <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding ItemDetailsLabel}" />
+                            <TextBlock Margin="0,10,0,0" Foreground="#5B728A" Text="{Binding SelectedPiece.DetailLine}" />
+                             <TextBlock Margin="0,6,0,0" Foreground="#5B728A" Text="{Binding SelectedPiece.TimestampText}" />
+                             <TextBlock Margin="0,6,0,0" Foreground="#5B728A" Text="{Binding SelectedPiece.ProductionText}" />
+                             <TextBlock Margin="0,6,0,0" Foreground="#5B728A" Text="{Binding SelectedPiece.InspectionSummary}" />
+                            <Border Margin="0,10,0,0"
+                                    Padding="10"
+                                    CornerRadius="6"
+                                    Background="#EEF6FC"
+                                    BorderBrush="#9FC5E3"
+                                    BorderThickness="1"
+                                    Visibility="{Binding SelectedPiece.HasTopThreeDProfileDetails, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Foreground="#244E70"
+                                           TextWrapping="Wrap"
+                                           Text="{Binding SelectedPiece.TopThreeDProfileDetails}" />
+                            </Border>
+                         </StackPanel>
+                     </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource PanelBorderStyle}" Margin="0">
+                        <StackPanel>
+                            <TextBlock FontSize="18" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding StorageDetailsLabel}" />
+                            <Border Margin="0,10,0,0"
+                                    Padding="10"
+                                    CornerRadius="8"
+                                    Background="#F8FBFE"
+                                    BorderBrush="#D9E4EF"
+                                    BorderThickness="1">
+                                <TextBlock TextWrapping="Wrap"
+                                           Foreground="#5B728A"
+                                           Text="{Binding SelectedPiece.PieceFolderPath}" />
+                            </Border>
+                            <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#5B728A" Text="{Binding SelectedPiece.TraceabilityNote}" />
+                            <ScrollViewer Margin="0,10,0,0"
+                                          MaxHeight="92"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding SelectedInspectionDescriptors}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,6" Padding="8,6" CornerRadius="8" Background="#F7FAFD" BorderBrush="#D9E4EF" BorderThickness="1">
+                                                <TextBlock Foreground="#33506F" Text="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                            <Button Margin="0,14,0,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource PrimaryActionButtonStyle}"
+                                    Command="{Binding DownloadEvidenceCommand}"
+                                    Content="{Binding DownloadEvidenceLabel}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource PanelBorderStyle}" Margin="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="220" />
+                                <RowDefinition Height="104" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock FontSize="20" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding SourceImagesLabel}" />
+                            <TextBlock Grid.Row="1"
+                                       Margin="0,8,0,0"
+                                       Foreground="#5B728A"
+                                       FontSize="13"
+                                       Text="{Binding SelectedSourceImageHint}" />
+
+                            <Border Grid.Row="2"
+                                    Margin="0,10,0,10"
+                                    Padding="10"
+                                    CornerRadius="12"
+                                    Background="#F8FBFE"
+                                    BorderBrush="#D9E4EF"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <Image Source="{Binding SelectedSourceImage.Image}" Stretch="Uniform" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="#7A90A8"
+                                               FontSize="16"
+                                               Text="{Binding NoImageSelectedLabel}"
+                                               Visibility="{Binding IsSourceImageMissing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <Button Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Command="{Binding OpenSourceZoomCommand}"
+                                            ToolTip="{Binding ZoomClickHint}" />
+                                </Grid>
+                            </Border>
+
+                            <ListBox Grid.Row="3"
+                                     ItemsSource="{Binding SourceImages}"
+                                     SelectedItem="{Binding SelectedSourceImage, Mode=TwoWay}"
+                                     ItemTemplate="{StaticResource ImageArtifactTemplate}"
+                                     ItemContainerStyle="{StaticResource ThumbnailListBoxItemStyle}"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource PanelBorderStyle}" Margin="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="220" />
+                                <RowDefinition Height="104" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock FontSize="20" FontWeight="SemiBold" Foreground="#183A5B" Text="{Binding ProcessedImagesLabel}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Margin="0,8,0,0"
+                                       Foreground="#5B728A"
+                                       FontSize="13"
+                                       Text="{Binding SelectedProcessedImageHint}" />
+
+                            <Border Grid.Row="2"
+                                    Margin="0,10,0,10"
+                                    Padding="10"
+                                    CornerRadius="12"
+                                    Background="#F8FBFE"
+                                    BorderBrush="#D9E4EF"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <Image Source="{Binding SelectedProcessedImage.Image}" Stretch="Uniform" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Foreground="#7A90A8"
+                                               FontSize="16"
+                                               Text="{Binding NoImageSelectedLabel}"
+                                               Visibility="{Binding IsProcessedImageMissing, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <Button Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Command="{Binding OpenProcessedZoomCommand}"
+                                            ToolTip="{Binding ZoomClickHint}" />
+                                </Grid>
+                            </Border>
+
+                            <ListBox Grid.Row="3"
+                                     ItemsSource="{Binding ProcessedImages}"
+                                     SelectedItem="{Binding SelectedProcessedImage, Mode=TwoWay}"
+                                     ItemTemplate="{StaticResource ImageArtifactTemplate}"
+                                     ItemContainerStyle="{StaticResource ThumbnailListBoxItemStyle}"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Zoom overlay — overlays header + content rows when an image is clicked -->
+        <Grid Grid.RowSpan="2"
+              Panel.ZIndex="999"
+              Visibility="{Binding IsZoomOverlayVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Rectangle Fill="#CC000000" />
+            <Border Margin="32"
+                    CornerRadius="16"
+                    Background="White"
+                    BorderBrush="#D8E2EC"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Margin="20,14,16,0">
+                        <TextBlock FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Foreground="#183A5B"
+                                   Text="{Binding ZoomOverlayTitleLabel}"
+                                   VerticalAlignment="Center" />
+                        <Button HorizontalAlignment="Right"
+                                Width="36"
+                                Height="36"
+                                FontSize="16"
+                                Content="✕"
+                                Command="{Binding CloseZoomCommand}" />
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1"
+                                  Margin="16,10"
+                                  HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto"
+                                  Background="#F8FBFE"
+                                  PreviewMouseWheel="ZoomScrollViewer_PreviewMouseWheel">
+                        <Image Source="{Binding ZoomedImage}"
+                               Stretch="None"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center">
+                            <Image.LayoutTransform>
+                                <ScaleTransform ScaleX="{Binding ZoomLevel}"
+                                                ScaleY="{Binding ZoomLevel}" />
+                            </Image.LayoutTransform>
+                        </Image>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="16,6,16,16">
+                        <Button Content="−"
+                                Width="40"
+                                Height="40"
+                                FontSize="20"
+                                Margin="4,0"
+                                Command="{Binding ZoomOutCommand}" />
+                        <Border Width="80"
+                                Height="40"
+                                Margin="4,0"
+                                CornerRadius="6"
+                                Background="#F0F4F8"
+                                BorderBrush="#D8E2EC"
+                                BorderThickness="1">
+                            <TextBlock Text="{Binding ZoomPercent}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#183A5B" />
+                        </Border>
+                        <Button Content="+"
+                                Width="40"
+                                Height="40"
+                                FontSize="20"
+                                Margin="4,0"
+                                Command="{Binding ZoomInCommand}" />
+                        <Button Content="1:1"
+                                Width="48"
+                                Height="40"
+                                Margin="12,0,4,0"
+                                Command="{Binding ResetZoomCommand}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

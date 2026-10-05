@@ -1,0 +1,1025 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{4641C834-AD1B-4516-941E-9E409369C24E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>QtisVisionPanel</RootNamespace>
+    <AssemblyName>QtisVisionPanel</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>default</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>default</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>QTisPanel.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.378.145" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.378.145" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Automation.BDaq4, Version=4.0.0.0, Culture=neutral, PublicKeyToken=463f5928d60183a0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Advantech\DAQNavi\Automation.BDaq\4.0.0.0\Automation.BDaq4.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.Rbbt.Net">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.Rbbt.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.Vision.Core.Net">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.Vision.Core.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.Vision.Startup.Net">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.Vision.Startup.Net.dll</HintPath>
+      <!-- Keep the bootstrap in the same VisionPro probing directory as RBBT,
+           ViDi EL and their native runtime. A private copy beside the HMI changes
+           Cognex native dependency resolution and breaks Classify VPP loading. -->
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.Vision.ViDiELClassify.Net">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.Vision.ViDiELClassify.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.Vision.ViDiELSegment.Net">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.Vision.ViDiELSegment.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Core, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.CorePlus, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.CorePlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Display.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Display.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.FGGigE, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.FGGigE.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ImageFile, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ImageFile.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ImageProcessing, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ImageProcessing.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ImageProcessing.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ImageProcessing.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Interop.Core, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.Interop.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.Interop.DisplayCtl">
+      <HintPath>C:\Program Files\Cognex\VisionPro\CogPlus\Cognex.VisionPro.Interop.DisplayCtl.dll</HintPath>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMAlign, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMAlign.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMAlign.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMAlign.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMRedLine, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMRedLine.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.PMRedLine.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.PMRedLine.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.QuickBuild.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.QuickBuild.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.QuickBuild.Core, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.QuickBuild.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.QuickBuild.IO, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.QuickBuild.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ToolGroup, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ToolGroup.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ToolGroup.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ToolGroup.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ViDiEL, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.ViDiEL.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.ViDiEL.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.VisionPro.ViDiEL.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionPro.VisionInterop, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro.VisionInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro3D, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro3D.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro3D.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro3D.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro3D.Core, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro3D.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro3D.Display.Controls, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro3D.Display.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionPro3D.Graphic, Version=93.0.0.0, Culture=neutral, PublicKeyToken=ef0f902af9dee505, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Cognex\VisionPro\ReferencedAssemblies\Cognex.VisionPro3D.Graphic.dll</HintPath>
+    </Reference>
+    <Reference Include="Cognex.VisionProUI.Controls">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.VisionProUI.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionProUI.Implementation">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.VisionProUI.Implementation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionProUI.ViDiELClassify.Controls">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.VisionProUI.ViDiELClassify.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cognex.VisionProUI.ViDiELSegment.Controls">
+      <HintPath>C:\Program Files\Cognex\VisionPro\bin\Cognex.VisionProUI.ViDiELSegment.Controls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
+    </Reference>
+    <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.4.1.0, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.32.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>packages\Google.Protobuf.3.32.0\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.3.8.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.1.3.8\lib\net462\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.3.8.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.Streams.1.3.8\lib\net462\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.8.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Hash.xxHash.1.0.8\lib\net462\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignColors, Version=5.3.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>packages\MaterialDesignColors.5.3.0\lib\net462\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=5.3.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>packages\MaterialDesignThemes.5.3.0\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.3595.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.3595.46\lib\net462\Microsoft.Web.WebView2.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.3595.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.3595.46\lib\net462\Microsoft.Web.WebView2.WinForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.3595.46, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.WebView2.1.0.3595.46\lib\net462\Microsoft.Web.WebView2.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.135\lib\net462\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=9.5.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>packages\MySql.Data.9.5.0\lib\net48\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>packages\NLog.6.0.6\lib\net46\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Configuration.ConfigurationManager.8.0.0\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Pipelines, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Pipelines.5.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="ZstdSharp, Version=0.8.6.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
+      <HintPath>packages\ZstdSharp.Port.0.8.6\lib\net462\ZstdSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Cls_Config\AsyncConfigManagerXml.cs" />
+    <Compile Include="Cls_Config\AsyncPreferenceConfigManager.cs" />
+    <Compile Include="Cls_Config\AsyncRecipeParam.cs" />
+    <Compile Include="Cls_Config\Calss_structure\ConfigClassStructure.cs" />
+    <Compile Include="Cls_Config\Calss_structure\OpcUaConfig.cs" />
+    <Compile Include="Cls_Config\Calss_structure\RecipeParameters.cs" />
+    <Compile Include="Cls_Vpro\CognexEventManager.cs" />
+    <Compile Include="Cls_Vpro\ICognexJobManager.cs" />
+    <Compile Include="Cls_Vpro\ICounterUpdater.cs" />
+    <Compile Include="Cls_Vpro\IgigaCameraAccess.cs" />
+    <Compile Include="Converters\AlarmCardAdditionalConverters.cs" />
+    <Compile Include="Converters\BooleanConverters.cs" />
+    <Compile Include="Converters\CollectionCountConverter.cs" />
+    <Compile Include="Converters\ColorToBrushConverter.cs" />
+    <Compile Include="Converters\DecimalTextBoxConverter.cs" />
+    <Compile Include="Database\AlarmCardRepository.cs" />
+    <Compile Include="Database\clsConnection.cs" />
+    <Compile Include="Database\Cls_CheckUser.cs" />
+    <Compile Include="Database\Cls_InitializzeDb.cs" />
+    <Compile Include="Database\CounterManager.cs" />
+    <Compile Include="Database\ConfigSnapshotRepository.cs" />
+    <Compile Include="Database\EventLogRepository.cs" />
+    <Compile Include="Database\AiDataRepositorySupport.cs" />
+    <Compile Include="Database\HealthSnapshotRepository.cs" />
+    <Compile Include="Database\TrainingSampleRepository.cs" />
+    <Compile Include="Database\InspectionMeasurementRepository.cs" />
+    <Compile Include="Database\GlobalCounterService.cs" />
+    <Compile Include="Database\MultiShotParamHistoryRepository.cs" />
+    <Compile Include="Database\OpcUaConfigurationRepository.cs" />
+    <Compile Include="Database\PowerFlex525ChangeHistoryRepository.cs" />
+    <Compile Include="Database\ProductionAnalyticsRepository.cs" />
+    <Compile Include="Database\ProductionRecord\ProduzioneRecord.cs" />
+    <Compile Include="DataManage\CameraInspectionMatrix.cs" />
+    <Compile Include="DataManage\IDefectClassifier.cs" />
+    <Compile Include="DataManage\InspectionConfigService.cs" />
+    <Compile Include="DataManage\InspectionProcessor.cs" />
+    <Compile Include="DataManage\IToolBlockValidator.cs" />
+    <Compile Include="Models\AdvantechDeviceManager.cs" />
+    <Compile Include="Models\Advantech\AdvantechDeviceConfig.cs" />
+    <Compile Include="Models\Pcie1756ChannelMap.cs" />
+    <Compile Include="Models\CameraModel.cs" />
+    <Compile Include="Models\CameraClassificationResult.cs" />
+    <Compile Include="Models\CameraResult.cs" />
+    <Compile Include="Models\CounterData.cs" />
+    <Compile Include="Models\HealthSnapshotEntry.cs" />
+    <Compile Include="Models\InspectionMeasurementEntry.cs" />
+    <Compile Include="Models\TrainingSampleEntry.cs" />
+    <Compile Include="Models\IoTimingRecommendation.cs" />
+    <Compile Include="Models\EjectionAlarmConfig.cs" />
+    <Compile Include="Models\SelectableDefect.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Services\OutputWatchdogService.cs" />
+    <Compile Include="Services\AutoRecipeSwitchService.cs" />
+    <Compile Include="Services\MachineSpeedService.cs" />
+    <Compile Include="Services\AuditLogService.cs" />
+    <Compile Include="Services\RecipeTransitionService.cs" />
+    <Compile Include="Services\StartupHealthChecker.cs" />
+    <Compile Include="Models\EjectionAlarmManager.cs" />
+    <Compile Include="Models\EventLogEntry.cs" />
+    <Compile Include="Models\SystemDiagnosticsModels.cs" />
+    <Compile Include="Models\IIODeviceManager.cs" />
+    <Compile Include="Models\InspectionItem.cs" />
+    <Compile Include="Models\PowerFlex525Models.cs" />
+    <Compile Include="Inspector\Abstractions\IDataSourceHealthProvider.cs" />
+    <Compile Include="Inspector\Abstractions\IImageEvidenceResolver.cs" />
+    <Compile Include="Inspector\Abstractions\IPieceHistoryRepository.cs" />
+    <Compile Include="Inspector\Models\InspectionResultDescriptor.cs" />
+    <Compile Include="Inspector\Models\InspectorDataSourceProfile.cs" />
+    <Compile Include="Inspector\Models\PieceEvidenceBundle.cs" />
+    <Compile Include="Inspector\Models\PieceHistoryQuery.cs" />
+    <Compile Include="Inspector\Models\PieceImageArtifact.cs" />
+    <Compile Include="Inspector\Models\PieceRecordSummary.cs" />
+    <Compile Include="Inspector\Services\InspectorProfileFactory.cs" />
+    <Compile Include="Inspector\Services\LocalPieceEvidenceResolver.cs" />
+    <Compile Include="Inspector\Services\MySqlPieceHistoryRepository.cs" />
+    <Compile Include="Inspector\ViewModels\DataInspectorViewModel.cs" />
+    <Compile Include="Inspector\ViewModels\ImageArtifactViewModel.cs" />
+    <Compile Include="Inspector\ViewModels\PieceCardViewModel.cs" />
+    <Compile Include="Inspector\ViewModels\RelayCommand.cs" />
+    <Compile Include="Models\BindingProxy.cs" />
+    <Compile Include="Models\DataAnalysisModels.cs" />
+    <Compile Include="Models\IOChannel.cs" />
+    <Compile Include="Models\MachineConfigurationBackupInfo.cs" />
+    <Compile Include="Models\MachineHardwareTemplate.cs" />
+    <Compile Include="Models\MachineRuntimeConfiguration.cs" />
+    <Compile Include="Models\MultiShotTrigger\MultiShotProfileSnapshot.cs" />
+    <Compile Include="Models\MultiShotTrigger\MultiShotTriggerModels.cs" />
+    <Compile Include="Models\RelayCommand.cs" />
+    <Compile Include="Models\ToolFusionSnapshot.cs" />
+    <Compile Include="Models\ToolMessageCatalog.cs" />
+    <Compile Include="Models\TrackedProduct.cs" />
+    <Compile Include="RecipeSwitch\RecipeAutoSwitcher.cs" />
+    <Compile Include="SaveImage\ISaveImage.cs" />
+    <Compile Include="ServerMessage\ServerMessagePersonalize.cs" />
+    <Compile Include="ServerMessage\ServerMessageStructure.cs" />
+    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Services\AlarmService.cs" />
+    <Compile Include="Services\ApplicationEventLogger.cs" />
+    <Compile Include="Services\AuthorizationService.cs" />
+    <Compile Include="Services\CameraDisplayManager.cs" />
+    <Compile Include="Services\AnnotatedImageCache.cs" />
+    <Compile Include="Services\CameraDiagnostics.cs" />
+    <Compile Include="Services\CameraTriggerCorrelationTracker.cs" />
+    <Compile Include="Services\ConfigurationRecoveryService.cs" />
+    <Compile Include="Services\DataAnalysisSnapshotCacheService.cs" />
+    <Compile Include="Services\DesignModeHelper.cs" />
+    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\IDisposableService.cs" />
+    <Compile Include="Services\InspectionOrchestrator.cs" />
+    <Compile Include="Services\IntegratedAlarmCardService.cs" />
+    <Compile Include="Services\LoginUserHistoryService.cs" />
+    <Compile Include="Services\MachineConfigurationService.cs" />
+    <Compile Include="Services\MachineController.cs" />
+    <Compile Include="Services\MachineRuntimeIo.cs" />
+    <Compile Include="Services\MachineRuntimeService.cs" />
+    <Compile Include="Services\MachineStatusService.cs" />
+    <Compile Include="Services\ManualPdfExportService.cs" />
+    <Compile Include="Services\MultiShotTrigger\IMultiShotTriggerController.cs" />
+    <Compile Include="Services\MultiShotTrigger\IMultiShotTriggerPlanBuilder.cs" />
+    <Compile Include="Services\MultiShotTrigger\DualIlluminationPhaseCoordinator.cs" />
+    <Compile Include="Services\MultiShotTrigger\ImageStitchingStatusReader.cs" />
+    <Compile Include="Services\MultiShotTrigger\MultiShotTriggerController.cs" />
+    <Compile Include="Services\MultiShotTrigger\MultiShotTriggerPlanBuilder.cs" />
+    <Compile Include="Services\MultiShotTrigger\VisionProStitchingParameterApplier.cs" />
+    <Compile Include="Services\NLogEventBridge.cs" />
+    <Compile Include="Services\IOpcUaClientService.cs" />
+    <Compile Include="Services\OpcUaClientService.cs" />
+    <Compile Include="Services\OpcUaConfigurationService.cs" />
+    <Compile Include="Services\OperatorInactivityService.cs" />
+    <Compile Include="Services\IPowerFlex525Client.cs" />
+    <Compile Include="Services\PhotocellTimedTriggerService.cs" />
+    <Compile Include="Services\PowerFlex525EtherNetIpClient.cs" />
+    <Compile Include="Services\PowerFlex525ParameterCatalog.cs" />
+    <Compile Include="Services\PowerFlex525Service.cs" />
+    <Compile Include="Services\RecipeAuthorizationService.cs" />
+    <Compile Include="Services\RecipeMachineRuntimeResolver.cs" />
+    <Compile Include="Services\ActiveVppCameraTriggerGate.cs" />
+    <Compile Include="Services\SystemDiagnosticsService.cs" />
+    <Compile Include="Services\HardwareTemperatureProvider.cs" />
+    <Compile Include="Services\HealthSnapshotService.cs" />
+    <Compile Include="Services\ProcessControlService.cs" />
+    <Compile Include="Services\PredictiveMaintenanceService.cs" />
+    <Compile Include="Services\TrainingDataCollectionService.cs" />
+    <Compile Include="Services\OnnxDefectClassifier.cs" />
+    <Compile Include="Services\OnnxInferenceWorkerClient.cs" />
+    <Compile Include="Services\IoTimingOptimizerService.cs" />
+    <Compile Include="Services\AiPerformanceMonitorService.cs" />
+    <Compile Include="Services\RecipeProductAdvisorService.cs" />
+    <Compile Include="Services\MachineHealthNotificationService.cs" />
+    <Compile Include="Services\DefectClassifierTrainingService.cs" />
+    <Compile Include="Services\MeasurementCaptureService.cs" />
+    <Compile Include="Services\TopThreeDMeasurementCorrection.cs" />
+    <Compile Include="Services\ToolFusionSnapshotService.cs" />
+    <Compile Include="Services\ToolLocalizationService.cs" />
+    <Compile Include="Services\ToolMainProjectEventMapper.cs" />
+    <Compile Include="Services\VisualPdfExportService.cs" />
+    <Compile Include="Services\VisionProRuntimeBootstrap.cs" />
+    <Compile Include="Services\VisionClassificationResultReader.cs" />
+    <Compile Include="Services\VisionToolBlockOutputSnapshot.cs" />
+    <Compile Include="Services\WindowScreenshotHelper.cs" />
+    <Compile Include="Support\TaskExtensions.cs" />
+    <Compile Include="Services\ViewFactoryService.cs" />
+    <Compile Include="OperationProgressWindow.xaml.cs">
+      <DependentUpon>OperationProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShutdownProgressWindow.xaml.cs">
+      <DependentUpon>ShutdownProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserSession.cs" />
+    <Compile Include="ViewModels\AuthorizedViewModel.cs" />
+    <Compile Include="ViewModels\CameraContainerViewModel.cs" />
+    <Compile Include="ViewModels\CameraTemplateSelector.cs" />
+    <Compile Include="ViewModels\ControlButtonsViewModel.cs" />
+    <Compile Include="ViewModels\DataAnalysisViewModel.cs" />
+    <Compile Include="ViewModels\DigitalIOViewModel.cs" />
+    <Compile Include="ViewModels\EjectionAlarmCardViewModel.cs" />
+    <Compile Include="ViewModels\InspectionConfigViewModel.cs" />
+    <Compile Include="ViewModels\InspectionCounterViewModel.cs" />
+    <Compile Include="ViewModels\JobToolEditorViewModel.cs" />
+    <Compile Include="ViewModels\AlarmsViewModel.cs" />
+    <Compile Include="ViewModels\AssistanceViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ManualViewModel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="ViewModels\OpcUaConfigurationViewModel.cs" />
+    <Compile Include="ViewModels\PreferenceViewModel.cs" />
+    <Compile Include="ViewModels\PowerFlex525ViewModel.cs" />
+    <Compile Include="ViewModels\RecipeItem.cs" />
+    <Compile Include="ViewModels\RecipeManagerViewModel.cs" />
+    <Compile Include="ViewModels\RecipeMachineRuntimeOverview.cs" />
+    <Compile Include="ViewModels\SystemDiagnosticsViewModel.cs" />
+    <Compile Include="ViewModels\DefectClassifierProfileItem.cs" />
+    <Compile Include="ViewModels\TopMenuBarViewModel.cs" />
+    <Compile Include="Views\InspectionConfigView.xaml.cs">
+      <DependentUpon>InspectionConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AboutVersionWindow.xaml.cs">
+      <DependentUpon>AboutVersionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AlarmNotificationWindow.xaml.cs">
+      <DependentUpon>AlarmNotificationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SystemNotificationWindow.xaml.cs">
+      <DependentUpon>SystemNotificationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\JobToolEditorView.xaml.cs">
+      <DependentUpon>JobToolEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LiveDisplayWindow.xaml.cs">
+      <DependentUpon>LiveDisplayWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NavigationMenu.xaml.cs">
+      <DependentUpon>NavigationMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DbQuatis.xaml.cs">
+      <DependentUpon>DbQuatis.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PreferenceView.xaml.cs">
+      <DependentUpon>PreferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RecipeManagerView.xaml.cs">
+      <DependentUpon>RecipeManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\AlarmsView.xaml.cs">
+      <DependentUpon>AlarmsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\AssistanceView.xaml.cs">
+      <DependentUpon>AssistanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\ControlButtons.xaml.cs">
+      <DependentUpon>ControlButtons.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DataAnalysisView.xaml.cs">
+      <DependentUpon>DataAnalysisView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DataInspectorView.xaml.cs">
+      <DependentUpon>DataInspectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DigitalIOControl.xaml.cs">
+      <DependentUpon>DigitalIOControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\CameraContainer.xaml.cs">
+      <DependentUpon>CameraContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\ClassificationFeatureCard.xaml.cs">
+      <DependentUpon>ClassificationFeatureCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\SideCameraView.xaml.cs">
+      <DependentUpon>SideCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\LeftCameraView.xaml.cs">
+      <DependentUpon>LeftCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\CameraFeaturesTitle.cs" />
+    <Compile Include="Views\UserControls\DisplayRecord\FrontCameraView.xaml.cs">
+      <DependentUpon>FrontCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\CameraOutcomeBackground.cs" />
+    <Compile Include="Views\UserControls\DisplayRecord\RearCameraView.xaml.cs">
+      <DependentUpon>RearCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\RightCameraView.xaml.cs">
+      <DependentUpon>RightCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\BottomCameraView.xaml.cs">
+      <DependentUpon>BottomCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\DisplayRecord\TopCameraView.xaml.cs">
+      <DependentUpon>TopCameraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\EjectionAlarmControl.xaml.cs">
+      <DependentUpon>EjectionAlarmControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\ManualView.xaml.cs">
+      <DependentUpon>ManualView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\OpcUaConfigurationView.xaml.cs">
+      <DependentUpon>OpcUaConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\PowerFlex525View.xaml.cs">
+      <DependentUpon>PowerFlex525View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\SystemDiagnosticsView.xaml.cs">
+      <DependentUpon>SystemDiagnosticsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\StatisticsView.xaml.cs">
+      <DependentUpon>StatisticsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\TopMenuBar.xaml.cs">
+      <DependentUpon>TopMenuBar.xaml</DependentUpon>
+    </Compile>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="OperationProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShutdownProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\InspectionIcons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InspectionConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AboutVersionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AlarmNotificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SystemNotificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\JobToolEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LiveDisplayWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NavigationMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DbQuatis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PreferenceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RecipeManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\AlarmsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\AssistanceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\ControlButtons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DataAnalysisView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DataInspectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DigitalIOControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\CameraContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\ClassificationFeatureCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\SideCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\LeftCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\FrontCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\RearCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\RightCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\BottomCameraView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\DisplayRecord\TopCameraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\EjectionAlarmControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\ManualView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\OpcUaConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\PowerFlex525View.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\SystemDiagnosticsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\StatisticsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\TopMenuBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Resource Include="QTisPanel.ico" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Docs\Manual\*.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Docs\Commissioning\*.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Documentation\MachineHardware\*.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Documentation\MachineHardware\*.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\AI\train_defect_classifier.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ConfigurationTemplates\*.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ThirdPartyNotices\*.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Docs\Manual\Images\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Resource Include="resources\Noto\NotoSans-Bold.ttf" />
+    <Resource Include="resources\Noto\NotoSans-BoldItalic.ttf" />
+    <Resource Include="resources\Noto\NotoSans-Italic.ttf" />
+    <Resource Include="resources\Noto\NotoSans-Regular.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Black.ttf" />
+    <Resource Include="resources\Roboto\Roboto-BlackItalic.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Bold.ttf" />
+    <Resource Include="resources\Roboto\Roboto-BoldItalic.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Italic.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Light.ttf" />
+    <Resource Include="resources\Roboto\Roboto-LightItalic.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Medium.ttf" />
+    <Resource Include="resources\Roboto\Roboto-MediumItalic.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Regular.ttf" />
+    <Resource Include="resources\Roboto\Roboto-Thin.ttf" />
+    <Resource Include="resources\Roboto\Roboto-ThinItalic.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-Bold.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-BoldItalic.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-Italic.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-Light.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-LightItalic.ttf" />
+    <Resource Include="resources\Roboto\RobotoCondensed-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="resources\4_1.png" />
+    <Resource Include="resources\6_1.png" />
+    <Resource Include="resources\alette-aperte.png" />
+    <Resource Include="resources\bin.png" />
+    <Resource Include="resources\bin_1.png" />
+    <Resource Include="resources\black_core.png" />
+    <Resource Include="resources\bottom_sealing.png" />
+    <Resource Include="resources\centratura-logo.png" />
+    <Resource Include="resources\COMPLIANT-OK.png" />
+    <Resource Include="resources\concentricity.png" />
+    <Resource Include="resources\controllo-flaps-MODULARE.png" />
+    <Resource Include="resources\core.png" />
+    <Resource Include="resources\D1.png" />
+    <Resource Include="resources\D2.png" />
+    <Resource Include="resources\D3.png" />
+    <Resource Include="resources\D4.png" />
+    <Resource Include="resources\D5.png" />
+    <Resource Include="resources\D6.png" />
+    <Resource Include="resources\D9.png" />
+    <Resource Include="resources\Exit.bmp" />
+    <Resource Include="resources\Green.png" />
+    <Resource Include="resources\handle.png" />
+    <Resource Include="resources\inscribed_circle.png" />
+    <Resource Include="resources\inspection_3d_height.png" />
+    <Resource Include="resources\inspection_3d_length.png" />
+    <Resource Include="resources\inspection_3d_profile.png" />
+    <Resource Include="resources\inspection_3d_width.png" />
+    <Resource Include="resources\KeyBoard.png" />
+    <Resource Include="resources\length.png" />
+    <Resource Include="resources\logo.png" />
+    <Resource Include="resources\logo_missing.png" />
+    <Resource Include="resources\logo_pulsar.png" />
+    <Resource Include="resources\logo_qbags.png" />
+    <Resource Include="resources\logo_qpacks.png" />
+    <Resource Include="resources\logo_qrolls.png" />
+    <Resource Include="resources\logo_qRoll_3D.png" />
+    <Resource Include="resources\missing_incorrect_roll.png" />
+    <Resource Include="resources\ocr.png" />
+    <Resource Include="resources\orange.jpg" />
+    <Resource Include="resources\pacco-deformato-MODULARE.png" />
+    <Resource Include="resources\presenza-marker-.png" />
+    <Resource Include="resources\Products2.bmp" />
+    <Resource Include="resources\red_led.png" />
+    <Resource Include="resources\saldatura-laterale-MODULARE.png" />
+    <Resource Include="resources\Saldatura-non-conforme-MODULARE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\power_off.png" />
+    <Resource Include="resources\power_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\alert_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="AI\QtisVisionPanel.OnnxWorker\QtisVisionPanel.OnnxWorker.csproj">
+      <Project>{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}</Project>
+      <Name>QtisVisionPanel.OnnxWorker</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Web.WebView2.1.0.3595.46\build\Microsoft.Web.WebView2.targets'))" />
+    <Error Condition="!Exists('packages\MaterialDesignThemes.5.3.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\MaterialDesignThemes.5.3.0\build\MaterialDesignThemes.targets'))" />
+  </Target>
+  <Target Name="SyncDesignerOutput" AfterTargets="Build" Condition="'$(Platform)' == 'x64'">
+    <PropertyGroup>
+      <DesignerOutputDir Condition="'$(Configuration)' == 'Debug'">$(MSBuildProjectDirectory)\bin\Debug\</DesignerOutputDir>
+      <DesignerOutputDir Condition="'$(Configuration)' == 'Release'">$(MSBuildProjectDirectory)\bin\Release\</DesignerOutputDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(DesignerOutputDir)" Condition="'$(DesignerOutputDir)' != ''" />
+    <ItemGroup Condition="'$(DesignerOutputDir)' != ''">
+      <DesignerOutputFiles Include="$(TargetPath)" />
+      <DesignerOutputFiles Include="$(TargetDir)$(TargetFileName).config" Condition="Exists('$(TargetDir)$(TargetFileName).config')" />
+      <DesignerOutputFiles Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+      <DesignerOutputFiles Include="@(ReferenceCopyLocalPaths)" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DesignerOutputFiles)" DestinationFolder="$(DesignerOutputDir)" SkipUnchangedFiles="true" Condition="'$(DesignerOutputDir)' != '' and '@(DesignerOutputFiles)' != ''" />
+  </Target>
+  <Target Name="RemoveInProcessRuntimeConflicts" AfterTargets="SyncDesignerOutput">
+    <ItemGroup>
+      <InProcessConflictFiles Include="$(TargetDir)Microsoft.ML.OnnxRuntime.dll" />
+      <InProcessConflictFiles Include="$(TargetDir)Microsoft.ML.OnnxRuntime.pdb" />
+      <InProcessConflictFiles Include="$(TargetDir)onnxruntime.dll" />
+      <InProcessConflictFiles Include="$(TargetDir)onnxruntime.lib" />
+      <InProcessConflictFiles Include="$(TargetDir)onnxruntime_providers_shared.dll" />
+      <InProcessConflictFiles Include="$(TargetDir)onnxruntime_providers_shared.lib" />
+      <InProcessConflictFiles Include="$(TargetDir)Cognex.Vision.Startup.Net.dll" />
+      <InProcessConflictFiles Include="$(TargetDir)Cognex.Vision.Startup.Net.xml" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)Microsoft.ML.OnnxRuntime.dll" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)Microsoft.ML.OnnxRuntime.pdb" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)onnxruntime.dll" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)onnxruntime.lib" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)onnxruntime_providers_shared.dll" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)onnxruntime_providers_shared.lib" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)Cognex.Vision.Startup.Net.dll" Condition="'$(DesignerOutputDir)' != ''" />
+      <InProcessConflictFiles Include="$(DesignerOutputDir)Cognex.Vision.Startup.Net.xml" Condition="'$(DesignerOutputDir)' != ''" />
+    </ItemGroup>
+    <Delete Files="@(InProcessConflictFiles)" TreatErrorsAsWarnings="false" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>cd $(TargetDir)
+if exist VisionProDependencies\ (rmdir VisionProDependencies)
+if exist "$(VPRO_ROOT)\bin" (
+  mklink /J VisionProDependencies "$(VPRO_ROOT)\bin"
+  if errorlevel 1 (
+    echo VisionProDependencies link creation skipped. Use a local NTFS checkout on the machine PC to create the VisionPro junction.
+    exit /b 0
+  )
+)</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="packages\MaterialDesignThemes.5.3.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.5.3.0\build\MaterialDesignThemes.targets')" />
+</Project>

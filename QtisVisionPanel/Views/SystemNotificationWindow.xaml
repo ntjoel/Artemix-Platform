@@ -1,0 +1,180 @@
+<Window x:Class="QtisVisionPanel.Views.SystemNotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Notifica Sistema"
+        Width="460" Height="Auto"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Topmost="True"
+        Tag="OK">
+
+    <Border x:Name="RootBorder"
+            CornerRadius="16"
+            ClipToBounds="True"
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="28" ShadowDepth="0" Color="#000000" Opacity="0.55"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ── Header ───────────────────────────────────────────── -->
+            <Border x:Name="HeaderBorder" Grid.Row="0" Padding="20,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="IconCircle"
+                            Grid.Column="0"
+                            Width="44" Height="44"
+                            CornerRadius="22"
+                            Margin="0,0,14,0"
+                            VerticalAlignment="Center">
+                        <TextBlock x:Name="IconText"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   FontSize="22"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock x:Name="SubtitleText"
+                                   FontSize="11"
+                                   FontWeight="Bold"/>
+                        <TextBlock x:Name="TitleText"
+                                   FontSize="17"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ── Corpo messaggio ───────────────────────────────────── -->
+            <Border Grid.Row="1" Background="#1A1A2E" Padding="20,16">
+                <Border Background="#2A2A3E"
+                        CornerRadius="10"
+                        Padding="14,12">
+                    <TextBlock x:Name="MessageText"
+                               FontSize="13"
+                               Foreground="#E8EAF6"
+                               TextWrapping="Wrap"
+                               LineHeight="20"/>
+                </Border>
+            </Border>
+
+            <!-- ── Footer ───────────────────────────────────────────── -->
+            <Border Grid.Row="2" Background="#111120" Padding="20,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="TimestampText"
+                               Grid.Column="0"
+                               FontSize="11"
+                               Foreground="#55557A"
+                               VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+
+                        <!-- Pulsante NO (visibile solo in modalità conferma) -->
+                        <Button x:Name="NoButton"
+                                Click="NoButton_Click"
+                                Width="120" Height="42"
+                                Cursor="Hand"
+                                Visibility="Collapsed"
+                                Margin="0,0,8,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="NoBd"
+                                            Background="#3A3A50"
+                                            CornerRadius="10"
+                                            Padding="16,0">
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE711;"
+                                                       FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14"
+                                                       Foreground="White"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,0"/>
+                                            <TextBlock Text="No"
+                                                       FontSize="13"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="NoBd" Property="Opacity" Value="0.82"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="NoBd" Property="Opacity" Value="0.65"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <!-- Pulsante OK / Sì — il testo è legato a Window.Tag -->
+                        <Button x:Name="CloseButton"
+                                Click="CloseButton_Click"
+                                Width="130" Height="42"
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="Bd"
+                                            Background="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                            CornerRadius="10"
+                                            Padding="16,0">
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE73E;"
+                                                       FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14"
+                                                       Foreground="White"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,8,0"/>
+                                            <!-- Testo legato a Window.Tag ("OK" o "Sì") -->
+                                            <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                       FontSize="13"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Opacity" Value="0.82"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter TargetName="Bd" Property="Opacity" Value="0.65"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

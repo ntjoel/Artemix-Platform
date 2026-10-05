@@ -1,0 +1,33 @@
+﻿<Window x:Class="QtisVisionPanel.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QtisVisionPanel"
+       mc:Ignorable="d"
+ Title="Avvio....." Height="300" Width="500"
+ WindowStyle="None"
+ ShowInTaskbar="False"
+ Topmost="True"
+ ResizeMode="NoResize"
+ AllowsTransparency="True"
+ Background="Transparent"
+ WindowStartupLocation="CenterScreen">
+    <Border Background="White" CornerRadius="10" Padding="20" BorderBrush="Gray" BorderThickness="1">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <!-- Logo -->
+            <Image Source="/Resources/logo_pulsar.png" Width="181" Height="120" Margin="0,0,0,10" />
+
+
+
+            <!-- Titolo -->
+            <TextBlock Text="Qtis Vision Panel" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" />
+
+            <!-- Messaggio -->
+            <TextBlock x:Name="StatusText" Text="Avvio in corso..." FontSize="16" Margin="0,0,0,10" />
+
+            <!-- Barra di progresso -->
+            <ProgressBar Width="300" Height="20"  x:Name="ProgressBar" Minimum="0" Maximum="100" Value="0"/>
+        </StackPanel>
+    </Border>
+</Window>

@@ -1,0 +1,236 @@
+<Window x:Class="QtisVisionPanel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:QtisVisionPanel.Views"
+        xmlns:uc="clr-namespace:QtisVisionPanel.Views.UserControls"
+        xmlns:conv="clr-namespace:QtisVisionPanel.Converters"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        WindowState="Maximized"
+        WindowStyle="None"
+        Background="#DCE5EE"
+        ResizeMode="CanResize"
+        Loaded="Window_Loaded"
+        SizeChanged="Window_SizeChanged"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="ShellBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="Orange" Offset="0"/>
+            <GradientStop Color="#D7E1EB" Offset="2"/>
+        </LinearGradientBrush>
+        <Thickness x:Key="ShellOuterBorderMargin">1</Thickness>
+        <Thickness x:Key="ShellInnerMargin">3</Thickness>
+        <Thickness x:Key="ShellContentPadding">4</Thickness>
+        <Thickness x:Key="ShellHostPadding">2</Thickness>
+
+        <Thickness x:Key="TopBarPadding">6</Thickness>
+        <Thickness x:Key="TopBarStatusPadding">10,7</Thickness>
+        <sys:Double x:Key="TopBarStatusMinWidth">156</sys:Double>
+        <sys:Double x:Key="TopBarStatusLabelFontSize">9</sys:Double>
+        <sys:Double x:Key="TopBarStatusValueFontSize">13</sys:Double>
+        <Thickness x:Key="TopBarMetricCardPadding">8,6</Thickness>
+        <Thickness x:Key="TopBarMetricCardMargin">0,0,6,0</Thickness>
+        <sys:Double x:Key="TopBarMetricLabelFontSize">9</sys:Double>
+        <sys:Double x:Key="TopBarMetricValueFontSize">13</sys:Double>
+
+        <sys:Double x:Key="NavigationMinWidth">190</sys:Double>
+        <Thickness x:Key="NavigationHeaderMargin">8,8,8,6</Thickness>
+        <Thickness x:Key="NavigationHeaderPadding">9</Thickness>
+        <sys:Double x:Key="NavigationLogoHeight">30</sys:Double>
+        <sys:Double x:Key="NavigationTitleFontSize">13</sys:Double>
+        <sys:Double x:Key="NavigationSummaryFontSize">10</sys:Double>
+        <sys:Double x:Key="NavigationDateFontSize">10</sys:Double>
+        <sys:Double x:Key="NavigationSectionHeaderFontSize">9</sys:Double>
+        <Thickness x:Key="NavigationSectionHeaderMargin">4,8,0,4</Thickness>
+        <sys:Double x:Key="NavigationMenuHeaderFontSize">11</sys:Double>
+        <sys:Double x:Key="NavigationSubMenuHeaderFontSize">10</sys:Double>
+        <Thickness x:Key="NavigationButtonPadding">8,6</Thickness>
+        <Thickness x:Key="NavigationMenuStackMargin">8,0,8,6</Thickness>
+        <Thickness x:Key="NavigationFooterMargin">8,0,8,8</Thickness>
+        <Thickness x:Key="NavigationFooterPadding">6</Thickness>
+
+        <sys:Double x:Key="CameraDisplayHostHeight">230</sys:Double>
+        <sys:Double x:Key="CameraDisplayHostMinHeight">205</sys:Double>
+        <conv:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    </Window.Resources>
+
+    <Grid MinWidth="1180" MinHeight="700" Background="{StaticResource ShellBackgroundBrush}">
+        <Border x:Name="ShellOuterBorder"
+                Margin="{DynamicResource ShellOuterBorderMargin}"
+                CornerRadius="8"
+                Background="#F5F8FC"
+                BorderBrush="#C7D4E2"
+                BorderThickness="1">
+            <Grid Margin="{DynamicResource ShellInnerMargin}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition x:Name="ShellGapRow" Height="6"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <uc:TopMenuBar Grid.Row="0" DataContext="{Binding TopMenuBarVM}"/>
+
+                <!-- System warning banner — visible only when DiagnosticsVM.HasSystemWarning is true -->
+                <Border Grid.Row="2"
+                        Background="#F5F8FC"
+                        BorderBrush="#D6E3EF"
+                        BorderThickness="0,1,0,1"
+                        Padding="8,3"
+                        Visibility="{Binding HasShellNotification, Converter={StaticResource BoolToVisibility}}">
+                    <Grid Height="28">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Background="#E9F4FF"
+                                BorderBrush="#89BFE8"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="10,0"
+                                Visibility="{Binding HasOnlyOperatorNotification, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="&#xE946;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Foreground="#146A9E"
+                                           FontSize="12"
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding OperatorNotificationText}"
+                                           Foreground="#104A70"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Background="#FFF2C2"
+                                BorderBrush="#E3B12E"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="10,0"
+                                Visibility="{Binding HasOnlyDiagnosticsNotification, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="&#xE7BA;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Foreground="#9A6200"
+                                           FontSize="12"
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DiagnosticsVM.SystemWarningText}"
+                                           Foreground="#7A4E00"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="0"
+                                Background="#E9F4FF"
+                                BorderBrush="#89BFE8"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="10,0"
+                                Visibility="{Binding HasBothShellNotifications, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="&#xE946;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Foreground="#146A9E"
+                                           FontSize="12"
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding OperatorNotificationText}"
+                                           Foreground="#104A70"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2"
+                                Background="#FFF2C2"
+                                BorderBrush="#E3B12E"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="10,0"
+                                Visibility="{Binding HasBothShellNotifications, Converter={StaticResource BoolToVisibility}}">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="&#xE7BA;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Foreground="#9A6200"
+                                           FontSize="12"
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DiagnosticsVM.SystemWarningText}"
+                                           Foreground="#7A4E00"
+                                           FontSize="12"
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="ShellSidebarColumn" Width="192"/>
+                        <ColumnDefinition x:Name="ShellSidebarGapColumn" Width="6"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            CornerRadius="16"
+                            Background="#0F2237"
+                            BorderBrush="#203A56"
+                            BorderThickness="1">
+                        <views:NavigationMenu x:Name="NavigationMenuControl"
+                                              DataContext="{Binding NavigationVM}"/>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            CornerRadius="16"
+                            Background="#FBFDFF"
+                            BorderBrush="#D5E0EB"
+                            BorderThickness="1"
+                            Padding="{DynamicResource ShellContentPadding}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0"
+                                    CornerRadius="14"
+                                    Background="#EEF3F8"
+                                    BorderBrush="#D8E2EC"
+                                    BorderThickness="1"
+                                    Padding="{DynamicResource ShellHostPadding}">
+                                <ContentControl Content="{Binding CurrentView}"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

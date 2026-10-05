@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QtisVisionPanel", "QtisVisionPanel.csproj", "{4641C834-AD1B-4516-941E-9E409369C24E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QtisVisionPanel.OnnxWorker", "AI\QtisVisionPanel.OnnxWorker\QtisVisionPanel.OnnxWorker.csproj", "{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Debug|x64.ActiveCfg = Debug|x64
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Debug|x64.Build.0 = Debug|x64
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Release|x64.ActiveCfg = Release|x64
+		{4641C834-AD1B-4516-941E-9E409369C24E}.Release|x64.Build.0 = Release|x64
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Debug|x64.Build.0 = Debug|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Release|x64.ActiveCfg = Release|Any CPU
+		{42B55A6E-A5E6-4DC7-9E7D-D224A85D9C9B}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DCCD116F-0D4E-4C65-B099-20540A24C2A0}
+	EndGlobalSection
+EndGlobal

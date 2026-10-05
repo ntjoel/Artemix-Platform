@@ -1,0 +1,293 @@
+<Window x:Class="QtisVisionPanel.Views.AlarmNotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Allarme Sistema"
+        Width="480" Height="Auto"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        Topmost="True">
+
+    <Border CornerRadius="16"
+            ClipToBounds="True"
+            BorderBrush="#BF3030"
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="28" ShadowDepth="0" Color="#000000" Opacity="0.55"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ── Header ─────────────────────────────────────────── -->
+            <Border Grid.Row="0" Background="#BF2020" Padding="20,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icona allarme -->
+                    <Border Grid.Column="0"
+                            Width="44" Height="44"
+                            CornerRadius="22"
+                            Background="#FF4444"
+                            Margin="0,0,14,0"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="&#xE814;"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   FontSize="22"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Titolo -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="ALLARME SCARTO"
+                                   FontSize="11"
+                                   FontWeight="Bold"
+                                   Foreground="#FFCCCC"/>
+                        <TextBlock x:Name="AlarmNameText"
+                                   FontSize="17"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                    <!-- Ora trigger -->
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="Ora"
+                                   FontSize="10"
+                                   Foreground="#FFCCCC"
+                                   HorizontalAlignment="Right"/>
+                        <TextBlock x:Name="TriggerTimeText"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ── Dettagli allarme ───────────────────────────────── -->
+            <Border Grid.Row="1" Background="#1A1A2E" Padding="20,16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Messaggio principale -->
+                    <Border Grid.Row="0"
+                            Background="#2A2A3E"
+                            CornerRadius="10"
+                            Padding="14,10"
+                            Margin="0,0,0,12">
+                        <TextBlock x:Name="MessageText"
+                                   FontSize="13"
+                                   Foreground="#E8EAF6"
+                                   TextWrapping="Wrap"
+                                   LineHeight="20"/>
+                    </Border>
+
+                    <!-- Griglia info -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Canale uscita -->
+                        <Border Grid.Column="0"
+                                Background="#2A2A3E"
+                                CornerRadius="10"
+                                Padding="12,10"
+                                Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="CANALE USCITA"
+                                           FontSize="9"
+                                           FontWeight="Bold"
+                                           Foreground="#7986CB"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="ChannelText"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Durata segnale -->
+                        <Border Grid.Column="1"
+                                Background="#2A2A3E"
+                                CornerRadius="10"
+                                Padding="12,10"
+                                Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="DURATA SEGNALE"
+                                           FontSize="9"
+                                           FontWeight="Bold"
+                                           Foreground="#7986CB"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="DurationText"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="White"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Difetto rilevato -->
+                    <Border Grid.Row="2"
+                            x:Name="DefectsPanel"
+                            Background="#1E2A1E"
+                            BorderBrush="#43A047"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,8"
+                            Margin="0,10,0,0"
+                            Visibility="Collapsed">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="&#xE946;"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="16"
+                                       Foreground="#66BB6A"
+                                       VerticalAlignment="Top"
+                                       Margin="0,1,10,0"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="DIFETTO RILEVATO"
+                                           FontSize="9"
+                                           FontWeight="Bold"
+                                           Foreground="#66BB6A"
+                                           Margin="0,0,0,4"/>
+                                <TextBlock x:Name="DefectsText"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="#C8E6C9"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Nota reset -->
+                    <Border Grid.Row="3"
+                            x:Name="ResetNotePanel"
+                            Background="#33271A"
+                            BorderBrush="#FF8C00"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,8"
+                            Margin="0,10,0,0"
+                            Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7BA;"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="14"
+                                       Foreground="#FF8C00"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,8,0"/>
+                            <TextBlock Text="L'uscita fisica rimarrà ALTA fino al clic su ACKNOWLEDGE."
+                                       FontSize="11"
+                                       Foreground="#FFB74D"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ── Footer con pulsante ───────────────────────────── -->
+            <Border Grid.Row="2"
+                    Background="#111120"
+                    Padding="20,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Tipo allarme badge -->
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <Border Background="#2A2A3E"
+                                CornerRadius="999"
+                                Padding="10,4"
+                                Margin="0,0,8,0">
+                            <TextBlock x:Name="AlarmTypeBadge"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"
+                                       Foreground="#9FA8DA"/>
+                        </Border>
+                        <Border x:Name="CountBadge"
+                                Background="#4A1010"
+                                CornerRadius="999"
+                                Padding="10,4">
+                            <TextBlock x:Name="CountText"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="#FF8A80"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Pulsante ACKNOWLEDGE -->
+                    <Button Grid.Column="1"
+                            x:Name="AcknowledgeButton"
+                            Click="AcknowledgeButton_Click"
+                            Width="160" Height="42"
+                            Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd"
+                                        Background="#BF2020"
+                                        CornerRadius="10"
+                                        Padding="16,0">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE73E;"
+                                                   FontFamily="Segoe MDL2 Assets"
+                                                   FontSize="14"
+                                                   Foreground="White"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,8,0"/>
+                                        <TextBlock Text="ACKNOWLEDGE"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#D42020"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#A01010"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
